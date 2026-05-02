@@ -558,15 +558,8 @@ function HistorialPanel({patente}){
   const items = HISTORIAL[patente];
   if(!items||items.length===0) return null;
 
-  // Filtrar: último año o últimas 3, lo que sea menor
-  const unAnioAtras = new Date();
-  unAnioAtras.setFullYear(unAnioAtras.getFullYear()-1);
-  const filtrados = items
-    .filter(i=>new Date(i.fecha)>=unAnioAtras)
-    .slice(-3)
-    .reverse(); // más reciente primero
-
-  if(filtrados.length===0) return null;
+  // Todas las intervenciones, más reciente primero
+  const ordenadas = [...items].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
 
   return(
     <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:20,boxShadow:"0 1px 4px rgba(0,0,0,0.06)"}}>
@@ -575,10 +568,10 @@ function HistorialPanel({patente}){
         <p style={{fontSize:12,fontWeight:700,color:P.txtLabel,textTransform:"uppercase",letterSpacing:"0.08em",margin:0}}>
           Historial de Intervenciones
         </p>
-        <span style={{fontSize:11,color:P.txtDim,fontWeight:500}}>— últimas 3 / último año</span>
+        <span style={{fontSize:11,color:P.txtDim,fontWeight:500}}>— {ordenadas.length} registros</span>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        {filtrados.map((item,i)=>{
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {ordenadas.map((item,i)=>{
           const tc=TIPO_COLORS[item.tipo]||TIPO_COLORS.OTRO;
           const fecha=new Date(item.fecha+"T12:00:00").toLocaleDateString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric"});
           return(
