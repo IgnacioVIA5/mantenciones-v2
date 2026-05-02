@@ -294,6 +294,70 @@ const OPERATORS = [
   "Cecilia Sandoval","Ignacio Echeverría"
 ];
 
+/* ═══════════════════════ HISTORIAL POR EQUIPO ═══════════════════════
+   Solo lectura — se actualiza cuando se actualiza el MAESTRO.
+   tipo: "PREVENTIVA" | "GENERAL" | "CORRECTIVA" | "OTRO"
+   Límite: últimas 3 intervenciones o último año (lo que sea menor).
+════════════════════════════════════════════════════════════════════ */
+const HISTORIAL = {
+  "DFLW-71": [
+    {fecha:"2026-01-12", tipo:"PREVENTIVA", detalle:"Cambio filtro de aire. Hr: 12.023 / Km: 361.181"},
+    {fecha:"2026-01-29", tipo:"CORRECTIVA", detalle:"Cambio 4 quesos suspensión punta paquete, 1 hoja resorte, perno centro, 2 abrazaderas eje trasero izq."},
+    {fecha:"2026-03-02", tipo:"OTRO",       detalle:"Engrase completo. Hr: 12.144 / Km: 362.695"},
+  ],
+  "DRHK-42": [
+    {fecha:"2025-11-13", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros completos. Hr: 10.284 / Km: 167.590"},
+    {fecha:"2025-11-20", tipo:"CORRECTIVA", detalle:"Cambio pulmón de freno. Pendiente válvula repartidora de aire."},
+    {fecha:"2025-11-25", tipo:"CORRECTIVA", detalle:"Reparación estanque hidráulico."},
+  ],
+  "DHXR-54": [
+    {fecha:"2026-02-05", tipo:"OTRO",       detalle:"Engrase completo. Hr: 15.645 / Km: 211.656"},
+    {fecha:"2026-03-19", tipo:"PREVENTIVA", detalle:"Cambio filtro de aire. Hr: 15.692 / Km: 212.125"},
+    {fecha:"2025-09-29", tipo:"CORRECTIVA", detalle:"Embalado completo, cambio cruceta, relleno coronas, 4 retenes maza, 4 chicharras freno, 3 bujes excéntrica."},
+  ],
+  "RHGC-83": [
+    {fecha:"2025-10-24", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. Hr: 7.562 / Km: 37.183"},
+    {fecha:"2025-11-12", tipo:"CORRECTIVA", detalle:"Embalado completo, 2 neumáticos nuevos, cambio V suspensión puente medio, 2 pernos rueda."},
+    {fecha:"2026-01-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 7.137 / Km: 80.570"},
+  ],
+  "RKSC-25": [
+    {fecha:"2025-10-26", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. 5 pernos rueda. Hr: 7.217 / Km: 26.399"},
+    {fecha:"2025-11-17", tipo:"CORRECTIVA", detalle:"Embalado completo, 4 pernos rueda, cambio V soporte puente trasero."},
+    {fecha:"2026-01-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 35L + filtros."},
+  ],
+  "SW-6114": [
+    {fecha:"2025-01-14", tipo:"PREVENTIVA", detalle:"Cambio 3 filtros petróleo, limpieza chupador estanque petróleo."},
+  ],
+  "HDWS-49": [
+    {fecha:"2025-12-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 11.178"},
+    {fecha:"2026-01-28", tipo:"CORRECTIVO", detalle:"Cambio calzas balde N°103352TL. Hr: 11.275"},
+  ],
+  "LVGS-87": [
+    {fecha:"2025-09-16", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 8.088. Pendiente: filtro hidráulico, pilotaje, aceite 80W-90 traslación."},
+    {fecha:"2025-10-02", tipo:"PREVENTIVA", detalle:"Completado pendiente: filtro hidráulico, pilotaje, aceite 80W-90 traslación 30L."},
+    {fecha:"2025-12-15", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 8.266"},
+  ],
+  "TCCW-19": [
+    {fecha:"2025-11-13", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 3.214"},
+    {fecha:"2026-01-22", tipo:"GENERAL",    detalle:"Cambio aceite motor 15W-40 35L + filtros completos. Hr: 3.510"},
+    {fecha:"2025-06-16", tipo:"CORRECTIVA", detalle:"Cambio corona de giro nueva tras revisión técnicos DEVELON por golpeteo. Hr: 2.571"},
+  ],
+  "LXDT-19": [
+    {fecha:"2025-07-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 18L + filtros. Hr: 7.231"},
+    {fecha:"2025-11-05", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 19L + filtros."},
+    {fecha:"2025-12-05", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico 180L tipo 46 + filtros hidráulicos. Hr: 7.544"},
+  ],
+  "SDTP-59": [
+    {fecha:"2025-08-21", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 5.795"},
+    {fecha:"2025-10-05", tipo:"GENERAL",    detalle:"Cambio aceite motor 24L + mandos finales 10W-30 60L + transmisión 10W-30 8L + hidráulico 80W-90 90L. Hr: 6.033"},
+    {fecha:"2026-01-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros. Hr: 6.647"},
+  ],
+  "RHRB-94": [
+    {fecha:"2025-12-21", tipo:"CORRECTIVA", detalle:"Cambio rótulas inferiores y rodamientos maza. Km: 139.982"},
+    {fecha:"2026-01-19", tipo:"PREVENTIVA", detalle:"Cambio filtro petróleo."},
+  ],
+};
+
 /* ═══════════════════════ UTILS ═══════════════════════ */
 function fmt(n,dec=0){if(n==null||Number.isNaN(+n))return"—";return Number(n).toLocaleString("es-CL",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
 const todayISO=()=>{const d=new Date();d.setHours(0,0,0,0);const p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
@@ -481,6 +545,61 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
   );
 }
 
+/* ═══════════════════════ HISTORIAL PANEL ═══════════════════════ */
+const TIPO_COLORS = {
+  PREVENTIVA: {bg:"#dbeafe", fg:"#1d4ed8", label:"Preventiva"},
+  GENERAL:    {bg:"#dcfce7", fg:"#166534", label:"General"},
+  CORRECTIVA: {bg:"#fff7ed", fg:"#c2410c", label:"Correctiva"},
+  CORRECTIVO: {bg:"#fff7ed", fg:"#c2410c", label:"Correctiva"},
+  OTRO:       {bg:"#f1f5f9", fg:"#475569", label:"Otro"},
+};
+
+function HistorialPanel({patente}){
+  const items = HISTORIAL[patente];
+  if(!items||items.length===0) return null;
+
+  // Filtrar: último año o últimas 3, lo que sea menor
+  const unAnioAtras = new Date();
+  unAnioAtras.setFullYear(unAnioAtras.getFullYear()-1);
+  const filtrados = items
+    .filter(i=>new Date(i.fecha)>=unAnioAtras)
+    .slice(-3)
+    .reverse(); // más reciente primero
+
+  if(filtrados.length===0) return null;
+
+  return(
+    <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:20,boxShadow:"0 1px 4px rgba(0,0,0,0.06)"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+        <span style={{fontSize:18}}>📋</span>
+        <p style={{fontSize:12,fontWeight:700,color:P.txtLabel,textTransform:"uppercase",letterSpacing:"0.08em",margin:0}}>
+          Historial de Intervenciones
+        </p>
+        <span style={{fontSize:11,color:P.txtDim,fontWeight:500}}>— últimas 3 / último año</span>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {filtrados.map((item,i)=>{
+          const tc=TIPO_COLORS[item.tipo]||TIPO_COLORS.OTRO;
+          const fecha=new Date(item.fecha+"T12:00:00").toLocaleDateString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric"});
+          return(
+            <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"10px 14px",background:"#f8fafc",borderRadius:10,border:`1px solid ${P.border}`}}>
+              <div style={{flexShrink:0,minWidth:80}}>
+                <span style={{fontSize:11,fontWeight:600,color:P.txtMuted}}>{fecha}</span>
+              </div>
+              <div style={{flexShrink:0}}>
+                <span style={{background:tc.bg,color:tc.fg,padding:"2px 8px",borderRadius:6,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                  {tc.label}
+                </span>
+              </div>
+              <p style={{fontSize:12,color:P.txtBody,margin:0,lineHeight:1.5}}>{item.detalle}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════ EDITOR EQUIPO ═══════════════════════ */
 const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEquipo}){
   const s=calcularEstado(e);
@@ -514,7 +633,7 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
   const restablecer=()=>{
     const m=MAESTRO[e.patente];
     if(!m)return;
-    if(window.confirm(`¿Restablecer datos oficiales de ${e.patente}?\nEsto sobreescribirá horómetro, fechas e insumos.`)){
+    if(window.confirm(`¿Restablecer datos oficiales de ${e.patente}?\nEsto sobreescribirá horómetro, fechas e insumos.\nEl historial se carga automáticamente.`)){
       upd({
         modelo:m.modelo,
         preventivaCada:m.preventivaCada,
@@ -657,6 +776,9 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
             rows={3} placeholder="Observaciones, próximos trabajos, recordatorios..."
             value={e.notas||""} onChange={v=>upd({notas:v.target.value})}/>
         </div>
+
+        {/* Historial */}
+        <HistorialPanel patente={e.patente}/>
       </div>
 
       {/* PANEL LATERAL */}
