@@ -698,7 +698,7 @@ const OPERATORS = [
 ];
 
 /* ═══════════════════════ UTILS ═══════════════════════ */
-function fmt(n,dec=0){if(n==null||Number.isNaN(+n))return"—";return Number(n).toLocaleString("es-CL",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function fmt(n,dec=0){if(n==null||Number.isNaN(+n))return"—";const v=Number(n);return(v===0?0:v).toLocaleString("es-CL",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
 const todayISO=()=>{const d=new Date();d.setHours(0,0,0,0);const p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
 function parseISO(d){if(!d)return null;const[y,m,da]=String(d).split("-").map(Number);if(!y||!m||!da)return null;const dt=new Date(y,m-1,da);return isNaN(dt)?null:dt;}
 function daysBetween(a,b){const A=parseISO(a),B=parseISO(b||todayISO());if(!A||!B)return 0;return Math.round((new Date(B).setHours(0,0,0,0)-new Date(A).setHours(0,0,0,0))/86400000);}
