@@ -1,4 +1,4 @@
-// src/App.jsx — VIA5 Mantenciones v2.0
+// src/App.jsx — VIA5 Mantenciones v2.1
 import React, { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -24,7 +24,6 @@ async function ensureAnonAuth() {
   return auth.currentUser;
 }
 
-/* ═══════════════════════ PALETA ═══════════════════════ */
 const P = {
   page:"#f1f5f9", card:"#ffffff", border:"#e2e8f0",
   dark:"#0f172a", txtTitle:"#0f172a", txtBody:"#374151",
@@ -34,15 +33,12 @@ const P = {
   yellow:"#facc15", green:"#16a34a", blue:"#2563eb",
 };
 
-/* ═══════════════════════ DATOS MAESTROS ═══════════════════════
-   Fuente: Manifold + Mecánico (cruzados y depurados)
-   Actualizar este objeto cuando lleguen nuevos registros.
-════════════════════════════════════════════════════════════ */
+/* ═══════════════════════ DATOS MAESTROS ═══════════════════════ */
 const MAESTRO = {
   "DFLW-71": {
     modelo:"Mack Granite", preventivaCada:300, generalCada:2000,
     horaActual:12256, horaActualFecha:"2026-04-29",
-    ultimaPreventivaHora:0, ultimaGeneralHora:0,
+    ultimaPreventivaHora:12023, ultimaGeneralHora:0,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",              cant:38, enBodega:false},
       {tipo:"Filtro", nombre:"Aire",                       cant:1,  enBodega:false},
@@ -95,9 +91,9 @@ const MAESTRO = {
     insumosGen:[],
   },
   "RHGC-83": {
-    modelo:"Volkswagen", preventivaCada:300, generalCada:2000,
-    horaActual:7137, horaActualFecha:"2026-01-19",
-    ultimaPreventivaHora:7137, ultimaGeneralHora:0,
+    modelo:"Volkswagen Constellation", preventivaCada:300, generalCada:2000,
+    horaActual:7482, horaActualFecha:"2026-04-02",
+    ultimaPreventivaHora:7457, ultimaGeneralHora:0,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",               cant:38, enBodega:false},
       {tipo:"Filtro", nombre:"Aceite PSL909 (LF9009)",      cant:1,  enBodega:false},
@@ -109,12 +105,13 @@ const MAESTRO = {
     insumosGen:[
       {tipo:"Aceite", nombre:"Diferencial 85W-140",         cant:40, enBodega:false},
       {tipo:"Aceite", nombre:"Caja de cambios 75W-80",      cant:10, enBodega:false},
+      {tipo:"Aceite", nombre:"Hidráulico tolva ISO 68",     cant:60, enBodega:false},
     ],
   },
   "RKSC-25": {
-    modelo:"Volkswagen", preventivaCada:300, generalCada:2000,
-    horaActual:7217, horaActualFecha:"2025-10-26",
-    ultimaPreventivaHora:7217, ultimaGeneralHora:0,
+    modelo:"Volkswagen Constellation", preventivaCada:300, generalCada:2000,
+    horaActual:8091, horaActualFecha:"2026-04-02",
+    ultimaPreventivaHora:8091, ultimaGeneralHora:7634,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",               cant:38, enBodega:false},
       {tipo:"Filtro", nombre:"Aceite PSL909 (LF9009)",      cant:1,  enBodega:false},
@@ -126,6 +123,7 @@ const MAESTRO = {
     insumosGen:[
       {tipo:"Aceite", nombre:"Diferencial 85W-140",         cant:40, enBodega:false},
       {tipo:"Aceite", nombre:"Caja de cambios 75W-80",      cant:10, enBodega:false},
+      {tipo:"Aceite", nombre:"Hidráulico tolva ISO 68",     cant:60, enBodega:false},
     ],
   },
   "SW-6114": {
@@ -139,7 +137,7 @@ const MAESTRO = {
   "HDWS-49": {
     modelo:"Hyundai R220", preventivaCada:250, generalCada:2000,
     horaActual:11275, horaActualFecha:"2026-01-28",
-    ultimaPreventivaHora:11178, ultimaGeneralHora:10933,
+    ultimaPreventivaHora:11181, ultimaGeneralHora:10933,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",            cant:23, enBodega:false},
       {tipo:"Filtro", nombre:"Aceite PSL280",            cant:1,  enBodega:false},
@@ -157,8 +155,8 @@ const MAESTRO = {
   },
   "LVGS-87": {
     modelo:"Hyundai LC220", preventivaCada:250, generalCada:2000,
-    horaActual:8266, horaActualFecha:"2025-12-15",
-    ultimaPreventivaHora:8262, ultimaGeneralHora:8000,
+    horaActual:8266, horaActualFecha:"2025-12-16",
+    ultimaPreventivaHora:8266, ultimaGeneralHora:8000,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",            cant:23, enBodega:false},
       {tipo:"Filtro", nombre:"Aceite PSL280",            cant:1,  enBodega:false},
@@ -221,8 +219,8 @@ const MAESTRO = {
   },
   "SDTP-59": {
     modelo:"Komatsu WA320", preventivaCada:250, generalCada:2000,
-    horaActual:6647, horaActualFecha:"2026-01-22",
-    ultimaPreventivaHora:6647, ultimaGeneralHora:6033,
+    horaActual:7166, horaActualFecha:"2026-04-20",
+    ultimaPreventivaHora:7166, ultimaGeneralHora:6036,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",            cant:25, enBodega:false},
       {tipo:"Filtro", nombre:"Aceite PSL280",            cant:1,  enBodega:false},
@@ -254,51 +252,7 @@ const MAESTRO = {
   },
 };
 
-/* ═══════════════════════ CATEGORÍAS ═══════════════════════ */
-const CATEGORIES = [
-  {id:"CARGADOR",   label:"Cargadores Frontales", icon:"🚜"},
-  {id:"CAMION",     label:"Camiones Tolva",        icon:"🚛"},
-  {id:"EXCAVADORA", label:"Excavadoras",           icon:"🏗️"},
-  {id:"CAMIONETA",  label:"Camionetas",            icon:"🛻"},
-  {id:"GENERADOR",  label:"Generadores",           icon:"⚡"},
-  {id:"BATEA",      label:"Bateas",                icon:"📦"},
-  {id:"CAMA_BAJA",  label:"Camas Bajas",           icon:"🛤️"},
-];
-
-const BRANDS = {
-  CAMION:["Mack","Volkswagen","Renault"], CARGADOR:["Komatsu","Hyundai"],
-  EXCAVADORA:["Develon","Hyundai"], GENERADOR:["BSG","Hechizo"],
-  CAMIONETA:["Maxus","Peugeot"], BATEA:["Randon"], CAMA_BAJA:["Schilger"],
-};
-
-function platesFor(cat, marca) {
-  if (marca==="Mack")       return ["DFLW-71","DRHK-42","DHXR-54","WY-8717"];
-  if (marca==="Volkswagen") return ["RHGC-83","RKSC-25"];
-  if (marca==="Renault")    return ["SW-6114"];
-  if (marca==="Komatsu")    return ["SDTP-59"];
-  if (marca==="Hyundai") {
-    if (cat==="CARGADOR")   return ["LXDT-19"];
-    if (cat==="EXCAVADORA") return ["LVGS-87","HDWS-49"];
-  }
-  if (marca==="Develon")  return ["TCCW-19"];
-  if (marca==="Maxus")    return ["RHRB-94"];
-  if (marca==="Peugeot")  return ["TTVR-19"];
-  if (marca==="Randon")   return ["JL-8263"];
-  if (marca==="Schilger") return ["JH-4921"];
-  return [];
-}
-
-const OPERATORS = [
-  "Eligio Miranda","Patricio Obando","Salomón Fernández","Segundo Gómez",
-  "Fernando Gueicha","Francisco Bahamonde","Pedro Espinoza",
-  "Cecilia Sandoval","Ignacio Echeverría"
-];
-
-/* ═══════════════════════ HISTORIAL POR EQUIPO ═══════════════════════
-   Solo lectura — se actualiza cuando se actualiza el MAESTRO.
-   tipo: "PREVENTIVA" | "GENERAL" | "CORRECTIVA" | "OTRO"
-   Límite: últimas 3 intervenciones o último año (lo que sea menor).
-════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════ HISTORIAL COMPLETO ═══════════════════════ */
 const HISTORIAL = {
   "DFLW-71": [
     {fecha:"2023-03-20", tipo:"OTRO",       detalle:"Engrase completo y lavado"},
@@ -354,7 +308,7 @@ const HISTORIAL = {
     {fecha:"2025-01-06", tipo:"OTRO",       detalle:"Engrase completo. Km: 159.681"},
     {fecha:"2025-01-17", tipo:"CORRECTIVA", detalle:"Cambio empaquetadura toma fuerza caja de transmisión"},
     {fecha:"2025-01-21", tipo:"OTRO",       detalle:"Engrase completo. Km: 160.186"},
-    {fecha:"2025-03-26", tipo:"CORRECTIVA", detalle:"Cambio botella hidráulica y aceite. Botella enviada a reparar Puerto Montt. Instalación botella nueva. Km: 160.553. Cambio aceite hidráulico con filtros. Se fabrica soporte y bomba hidráulica botella. Cambio empaquetadura toma de fuerza."},
+    {fecha:"2025-03-26", tipo:"CORRECTIVA", detalle:"Cambio botella hidráulica y aceite. Reparación Puerto Montt. Botella nueva instalada. Cambio aceite hidráulico con filtros. Soporte y bomba hidráulica fabricados. Cambio empaquetadura toma de fuerza. Km: 160.553"},
     {fecha:"2025-04-01", tipo:"OTRO",       detalle:"Engrase completo. Km: 160.887"},
     {fecha:"2025-04-16", tipo:"OTRO",       detalle:"Engrase completo. Km: 161.572"},
     {fecha:"2025-05-06", tipo:"CORRECTIVA", detalle:"Cambio base freno y sensor de aire (ilegible). Km: 161.806"},
@@ -397,42 +351,192 @@ const HISTORIAL = {
     {fecha:"2026-02-05", tipo:"OTRO",       detalle:"Engrase completo. Hr: 15.645 / Km: 211.656"},
     {fecha:"2026-03-19", tipo:"PREVENTIVA", detalle:"Cambio filtro de aire. Hr: 15.692 / Km: 212.125"},
   ],
-  "RHGC-83": [
-    {fecha:"2024-08-14", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
-    {fecha:"2024-10-23", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
-    {fecha:"2025-01-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Reapriete cañería toma de fuerza el 17-01."},
-    {fecha:"2025-03-06", tipo:"CORRECTIVA", detalle:"Colocación soporte diferencial tensores puente trasero"},
-    {fecha:"2025-03-28", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 + filtros. Hr: 5.898 / Km: 66.708"},
-    {fecha:"2025-08-13", tipo:"CORRECTIVA", detalle:"Cambio 2 paquetes resorte con perno centro y refuerzo. Hr: 6.449 / Km: 71.011"},
-    {fecha:"2025-08-23", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. Hr: 6.630 / Km: 71.874"},
-    {fecha:"2025-10-24", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. Hr: 7.562 / Km: 37.183"},
-    {fecha:"2025-11-12", tipo:"CORRECTIVA", detalle:"Embalado completo, 2 neumáticos nuevos, cambio V suspensión puente medio, 2 pernos rueda."},
-    {fecha:"2026-01-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 7.137 / Km: 80.570"},
-  ],
   "RKSC-25": [
+    {fecha:"2022-06-22", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Km: 20.285"},
+    {fecha:"2022-12-16", tipo:"OTRO",       detalle:"Km: 30.142"},
+    {fecha:"2023-03-17", tipo:"OTRO",       detalle:"Sopletear filtro de aire y engrase completo. Hr: 2.919 / Km: 35.448"},
+    {fecha:"2023-04-13", tipo:"OTRO",       detalle:"Km: 36.569 / Hr: 3.002"},
+    {fecha:"2023-04-18", tipo:"OTRO",       detalle:"Km: 36.882 / Hr: 3.025"},
+    {fecha:"2023-04-26", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Km: 37.118 / Hr: 3.078"},
+    {fecha:"2023-07-12", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Km: 39.936 / Hr: 3.495"},
+    {fecha:"2023-10-12", tipo:"CORRECTIVA", detalle:"Cambio neumático delantero"},
+    {fecha:"2023-10-14", tipo:"CORRECTIVA", detalle:"Mantención Pto. Montt: cambio servo embrague, sensores ABS"},
+    {fecha:"2023-10-20", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-10-23", tipo:"CORRECTIVA", detalle:"Destapar placa servo, estaba asulfatada y oxidada, limpia contacto"},
+    {fecha:"2023-10-24", tipo:"OTRO",       detalle:"Hr: 4.003 / Km: 44.860"},
+    {fecha:"2023-11-03", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros, reapriete abrazaderas delanteras. Hr: 4.067 / Km: 45.647. Nota: se trizó máscara delantera de don César"},
+    {fecha:"2023-11-07", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-11-10", tipo:"CORRECTIVA", detalle:"Desarme embrague y mantención (don Rigo)"},
+    {fecha:"2023-11-14", tipo:"OTRO",       detalle:"Hr: 4.103 / Km: 45.933"},
+    {fecha:"2023-11-17", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-12-04", tipo:"CORRECTIVA", detalle:"Cambio de flexible"},
+    {fecha:"2023-12-20", tipo:"OTRO",       detalle:"Km: 47.661 / Hr: 4.288"},
+    {fecha:"2024-01-04", tipo:"OTRO",       detalle:"Km: 48.420 / Hr: 4.363"},
+    {fecha:"2024-01-05", tipo:"OTRO",       detalle:"Engrase total"},
+    {fecha:"2024-01-09", tipo:"OTRO",       detalle:"Km: 48.753 / Hr: 4.386"},
+    {fecha:"2024-01-11", tipo:"OTRO",       detalle:"Km: 49.000 / Hr: 4.403"},
+    {fecha:"2024-01-12", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-01-22", tipo:"CORRECTIVA", detalle:"Cambio hoja paquete delantero lado derecho"},
+    {fecha:"2024-01-24", tipo:"OTRO",       detalle:"Hr: 4.466 / Km: 49.597"},
+    {fecha:"2024-01-26", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-01-31", tipo:"PREVENTIVA", detalle:"Cambio filtro de aire. Hr: 4.507"},
+    {fecha:"2024-02-07", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-02-09", tipo:"PREVENTIVA", detalle:"Cambio de aceite (mantención preventiva). Hr: 4.564 / Km: 50.566"},
+    {fecha:"2024-02-26", tipo:"CORRECTIVA", detalle:"Cambio protector de hojas"},
+    {fecha:"2024-03-21", tipo:"OTRO",       detalle:"Km: 51.359 / Hr: 4.649"},
+    {fecha:"2024-04-05", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-04-09", tipo:"OTRO",       detalle:"Km: 52.219 / Hr: 4.737"},
+    {fecha:"2024-04-12", tipo:"OTRO",       detalle:"Hr: 4.766 / Km: 52.549"},
+    {fecha:"2024-04-17", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-05-07", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-05-24", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-05-30", tipo:"OTRO",       detalle:"Km: 54.219 / Hr: 4.982"},
+    {fecha:"2024-06-17", tipo:"PREVENTIVA", detalle:"Cambio hoja resorte paquete delantero, refuerzo ambos paquetes. Cambio de aceite. Cambio servo embrague. Hr: 5.018"},
+    {fecha:"2024-06-24", tipo:"OTRO",       detalle:"Km: 54.716 / Hr: 5.035"},
+    {fecha:"2024-07-12", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-07-19", tipo:"OTRO",       detalle:"Hr: 5.134 / Km: 55.416"},
+    {fecha:"2024-07-25", tipo:"OTRO",       detalle:"Hr: 5.167 / Km: 55.686"},
+    {fecha:"2024-07-26", tipo:"OTRO",       detalle:"Engrase completo"},
     {fecha:"2024-08-10", tipo:"CORRECTIVA", detalle:"Cambio soporte tensor correa"},
-    {fecha:"2024-10-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
+    {fecha:"2024-08-26", tipo:"CORRECTIVA", detalle:"Cambio base tensor V doble puente"},
+    {fecha:"2024-08-27", tipo:"OTRO",       detalle:"Hr: 5.241 / Km: 56.243"},
+    {fecha:"2024-09-05", tipo:"OTRO",       detalle:"Perfil de tolva modificado, quedó de 14m³"},
+    {fecha:"2024-09-06", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-09-10", tipo:"OTRO",       detalle:"Hr: 5.301 / Km: 56.712"},
+    {fecha:"2024-09-25", tipo:"OTRO",       detalle:"Hr: 5.338 / Km: 56.960"},
+    {fecha:"2024-09-27", tipo:"CORRECTIVA", detalle:"Cambio neumático delantero"},
+    {fecha:"2024-10-07", tipo:"PREVENTIVA", detalle:"Cambio de aceite (mantención preventiva). Hr: 5.380"},
+    {fecha:"2024-10-11", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.423"},
+    {fecha:"2024-10-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.462 / Km: 58.016"},
+    {fecha:"2024-10-25", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.497"},
+    {fecha:"2024-11-07", tipo:"OTRO",       detalle:"Km: 58.889 / Hr: 5.559"},
+    {fecha:"2024-11-08", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-11-15", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-11-22", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.645 / Km: 59.752"},
+    {fecha:"2024-11-29", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.692"},
+    {fecha:"2024-12-06", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.733"},
+    {fecha:"2024-12-10", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 5.741 / Km: 60.621"},
+    {fecha:"2024-12-23", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.816"},
+    {fecha:"2025-01-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.945"},
     {fecha:"2025-01-17", tipo:"CORRECTIVA", detalle:"Reapriete pernos tensores suspensión puerta trasera"},
-    {fecha:"2025-03-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 6.368 / Km: 17.912"},
-    {fecha:"2025-05-11", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 6.390"},
+    {fecha:"2025-03-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 6.074 / Km: 63.686"},
+    {fecha:"2025-03-14", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2025-03-21", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2025-04-21", tipo:"GENERAL",    detalle:"Cambio aceite diferencial 85W-140 (20L x diferencial, 40L total) + caja de cambios 75W-80 10L. Hr: 6.289 / Km: 65.787"},
+    {fecha:"2025-05-11", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 6.390 / Km: 66.483"},
+    {fecha:"2025-05-19", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2025-05-20", tipo:"OTRO",       detalle:"Km: 66.824 / Hr: 6.436"},
     {fecha:"2025-05-30", tipo:"CORRECTIVA", detalle:"Cambio 3 hojas resorte más perno centro. Hr: 6.468 / Km: 67.034"},
+    {fecha:"2025-06-02", tipo:"CORRECTIVA", detalle:"Reparación hojas quebradas paquete delantero izquierdo"},
+    {fecha:"2025-06-13", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2025-07-08", tipo:"OTRO",       detalle:"Km: 68.206 / Hr: 6.637"},
     {fecha:"2025-08-11", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 40L + filtros. Reapriete abrazaderas."},
     {fecha:"2025-08-19", tipo:"CORRECTIVA", detalle:"Suelta abrazaderas para acomodar hoja resorte"},
     {fecha:"2025-08-29", tipo:"CORRECTIVA", detalle:"Extracción 2 paquetes resortes, modificación y reemplazo curvas. Soporte candado chasis. Hr: 6.933 / Km: 23.560"},
-    {fecha:"2025-10-26", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. 5 pernos rueda. Hr: 7.217 / Km: 26.399"},
+    {fecha:"2025-09-29", tipo:"CORRECTIVA", detalle:"Cambio agujeta (ilegible) paquete delantero ambos lados. Hojas curvadas colocadas."},
+    {fecha:"2025-09-30", tipo:"OTRO",       detalle:"Km: 69.509 / Hr: 6.782"},
+    {fecha:"2025-10-06", tipo:"OTRO",       detalle:"Engrase total. Km: 71.328 / Hr: 6.934"},
+    {fecha:"2025-10-26", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros. 5 pernos rueda. Hr: 7.217 / Km: 72.174"},
     {fecha:"2025-11-17", tipo:"CORRECTIVA", detalle:"Embalado completo, 4 pernos rueda, cambio V soporte puente trasero. Hr: 7.110"},
-    {fecha:"2026-01-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 35L + filtros."},
+    {fecha:"2026-01-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 35L + filtros. Hr: 7.310 / Km: 75.970"},
+    {fecha:"2026-01-26", tipo:"OTRO",       detalle:"Eliminación Ad Blue. Hr: 7.374 / Km: 76.926"},
+    {fecha:"2026-03-05", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico tolva ISO 68, 65L"},
+    {fecha:"2026-03-09", tipo:"CORRECTIVA", detalle:"Cambio hoja resorte paquete delantero. Hr: 7.491"},
+    {fecha:"2026-03-24", tipo:"OTRO",       detalle:"Km: 80.321 / Hr: 7.589"},
+    {fecha:"2026-04-02", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 8.091"},
+  ],
+  "RHGC-83": [
+    {fecha:"2023-03-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 2.999"},
+    {fecha:"2023-03-30", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.047 / Km: 41.097"},
+    {fecha:"2023-04-11", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.102 / Km: 42.021"},
+    {fecha:"2023-04-20", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-05-05", tipo:"CORRECTIVA", detalle:"Cambio neumáticos traseros por delanteros"},
+    {fecha:"2023-05-11", tipo:"CORRECTIVA", detalle:"Cambio neumáticos delanteros por nuevos. Hr: 3.192 / Km: 42.877"},
+    {fecha:"2023-05-16", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.218 / Km: 43.272"},
+    {fecha:"2023-05-30", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-06-13", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.355 / Km: 44.039"},
+    {fecha:"2023-06-20", tipo:"PREVENTIVA", detalle:"Cambio aceite y filtros. Hr: 3.380 / Km: 44.163"},
+    {fecha:"2023-06-30", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-07-10", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.484 / Km: 44.689"},
+    {fecha:"2023-07-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.530 / Km: 44.949"},
+    {fecha:"2023-07-27", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.593 / Km: 45.468"},
+    {fecha:"2023-09-25", tipo:"OTRO",       detalle:"Engrase completo. Hr: 3.880 / Km: 48.498"},
+    {fecha:"2023-09-28", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L. Hr: 3.910 / Km: 48.928"},
+    {fecha:"2023-11-15", tipo:"CORRECTIVA", detalle:"Engrase completo, cambio de radiador. Hr: 3.944 / Km: 49.280"},
+    {fecha:"2023-11-28", tipo:"OTRO",       detalle:"Engrase completo. Hr: 4.009 / Km: 50.840"},
+    {fecha:"2023-12-22", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-01-31", tipo:"PREVENTIVA", detalle:"Cambio de filtro. Hr: 4.322"},
+    {fecha:"2024-02-07", tipo:"OTRO",       detalle:"Engrase completo. Hr: 4.360 / Km: 53.570"},
+    {fecha:"2024-02-26", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 4.446 / Km: 54.353"},
+    {fecha:"2024-03-11", tipo:"CORRECTIVA", detalle:"Mantención del servo y engrase completo. Hr: 4.517 / Km: 55.011"},
+    {fecha:"2024-04-30", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-07-25", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-07-26", tipo:"CORRECTIVA", detalle:"Cambio pernos masa trasera"},
+    {fecha:"2024-08-13", tipo:"OTRO",       detalle:"Engrase completo. Hr: 4.940 / Km: 58.622"},
+    {fecha:"2024-08-14", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 38L. Hr: 4.947 / Km: 58.648"},
+    {fecha:"2024-09-26", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.105 / Km: 59.667"},
+    {fecha:"2024-10-10", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.179 / Km: 60.235"},
+    {fecha:"2024-10-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.219 / Km: 60.526"},
+    {fecha:"2024-10-23", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 5.250 / Km: 60.804"},
+    {fecha:"2024-11-07", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-11-15", tipo:"CORRECTIVA", detalle:"Engrase completo, cambio flexible escape, revisión técnica. Hr: 5.351 / Km: 61.766"},
+    {fecha:"2024-11-21", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.390 / Km: 62.223"},
+    {fecha:"2024-11-28", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2024-12-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
+    {fecha:"2024-12-26", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.520 / Km: 63.616"},
+    {fecha:"2025-01-02", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.552 / Km: 64.062"},
+    {fecha:"2025-01-07", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 5.573 / Km: 64.167"},
+    {fecha:"2025-01-09", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.589 / Km: 64.289"},
+    {fecha:"2025-01-16", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.636 / Km: 64.776"},
+    {fecha:"2025-01-17", tipo:"CORRECTIVA", detalle:"Reapriete cañería toma de fuerza"},
+    {fecha:"2025-02-06", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.675 / Km: 65.163"},
+    {fecha:"2025-02-14", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.720 / Km: 65.410"},
+    {fecha:"2025-03-03", tipo:"OTRO",       detalle:"Camión en panne hasta 07-03-2025"},
+    {fecha:"2025-03-06", tipo:"CORRECTIVA", detalle:"Colocación soporte diferencial tensores puente trasero"},
+    {fecha:"2025-03-14", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.821 / Km: 65.891"},
+    {fecha:"2025-03-21", tipo:"OTRO",       detalle:"Engrase completo. Hr: 5.863 / Km: 66.502"},
+    {fecha:"2025-03-28", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 5.898 / Km: 66.708"},
+    {fecha:"2025-04-07", tipo:"GENERAL",    detalle:"Cambio aceite ambos diferenciales + cambio 1 hoja resorte delantera. Hr: 5.931 / Km: 67.063"},
+    {fecha:"2025-04-14", tipo:"CORRECTIVA", detalle:"Cambio gomas barra estabilizadora delantera. Engrase completo. Hr: 5.955 / Km: 67.230"},
+    {fecha:"2025-04-24", tipo:"CORRECTIVA", detalle:"Neumáticos traseros por delanteros, delanteros nuevos. Hr: 5.995 / Km: 67.471"},
+    {fecha:"2025-05-19", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.101 / Km: 68.444"},
+    {fecha:"2025-06-02", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.169 / Km: 68.488"},
+    {fecha:"2025-06-06", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 6.200 / Km: 69.020"},
+    {fecha:"2025-06-12", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.224 / Km: 69.166"},
+    {fecha:"2025-06-18", tipo:"GENERAL",    detalle:"Cambio aceite cubos reductores. Hr: 6.251 / Km: 69.304"},
+    {fecha:"2025-06-19", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.258 / Km: 69.354"},
+    {fecha:"2025-07-04", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2025-07-10", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.358 / Km: 70.078"},
+    {fecha:"2025-07-18", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.385 / Km: 70.226"},
+    {fecha:"2025-08-11", tipo:"CORRECTIVA", detalle:"Cambio hoja resorte quebrada, refuerzo 2 paquetes delanteros. Hr: 6.449 / Km: 71.011"},
+    {fecha:"2025-08-19", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.495 / Km: 71.549"},
+    {fecha:"2025-08-25", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L. Hr: 6.520 / Km: 71.874"},
+    {fecha:"2025-08-28", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.548 / Km: 72.300"},
+    {fecha:"2025-09-04", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.591 / Km: 72.641"},
+    {fecha:"2025-10-21", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.788 / Km: 75.255"},
+    {fecha:"2025-10-27", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 6.814 / Km: 75.622"},
+    {fecha:"2025-10-30", tipo:"CORRECTIVA", detalle:"Engrase completo, mantención balatas, cambio aceite tensor. Hr: 6.821 / Km: 75.633"},
+    {fecha:"2025-11-12", tipo:"CORRECTIVA", detalle:"Embalado completo, 2 neumáticos nuevos, cambio V suspensión puente medio, 2 pernos rueda."},
+    {fecha:"2025-11-21", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.882 / Km: 76.761"},
+    {fecha:"2025-12-01", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.920 / Km: 77.260"},
+    {fecha:"2025-12-11", tipo:"OTRO",       detalle:"Engrase completo. Hr: 6.966 / Km: 77.912"},
+    {fecha:"2026-01-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 7.137 / Km: 80.571"},
+    {fecha:"2026-02-19", tipo:"CORRECTIVA", detalle:"Cambio 2 neumáticos delanteros. Hr: 7.450 / Km: 85.800"},
+    {fecha:"2026-02-24", tipo:"CORRECTIVA", detalle:"Cambio 2 hojas de resorte y revisión total por ruidos de frenado"},
+    {fecha:"2026-02-25", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico levante tolva ISO 68, 60L. Hr: 7.467 / Km: 86.008"},
+    {fecha:"2026-03-21", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 35L + filtros. Hr: 7.457 / Km: 85.855"},
+    {fecha:"2026-03-30", tipo:"CORRECTIVA", detalle:"Cambio hoja resorte delantera izquierda, perno centro y abrazaderas. Hr: 7.482 / Km: 86.214"},
   ],
   "SW-6114": [
     {fecha:"2025-01-14", tipo:"PREVENTIVA", detalle:"Cambio 3 filtros petróleo, limpieza chupador estanque petróleo."},
   ],
   "HDWS-49": [
     {fecha:"2023-03-23", tipo:"GENERAL",    detalle:"Reparación reductor de giro: rodamiento superior, retén aceite, conjunto planetario, piñón central inferior. Aceite 85W-140. Cambio aceite hidráulico SAE 68 con todos los filtros. Hr: 10.466"},
-    {fecha:"2023-03-27", tipo:"OTRO",       detalle:"Listado reparaciones pendientes: bujes/pasadores balde, cilindros gemelas, marcador combustible, tapas batería, pisadera, radio, aire acondicionado, katalinas rueda motriz, pérdida aceite mandos cabina. Hr: 10.468"},
+    {fecha:"2023-03-27", tipo:"OTRO",       detalle:"Listado reparaciones pendientes: bujes/pasadores balde, cilindros gemelas, marcador combustible, tapas batería, pisadera, radio, AC, katalinas rueda motriz, pérdida aceite mandos cabina. Hr: 10.468"},
     {fecha:"2023-03-30", tipo:"CORRECTIVA", detalle:"Cambio puntillas nuevas de balde. Hr: 10.494"},
     {fecha:"2023-07-03", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + relleno aceite hidráulico SAE 68. Hr: 10.672"},
     {fecha:"2023-10-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros completos. Hr: 10.933"},
-    {fecha:"2025-12-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 11.178"},
+    {fecha:"2025-12-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 11.181"},
     {fecha:"2026-01-28", tipo:"CORRECTIVA", detalle:"Cambio calzas balde N°103352TL. Hr: 11.275"},
   ],
   "LVGS-87": [
@@ -454,15 +558,15 @@ const HISTORIAL = {
     {fecha:"2025-07-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 22L + filtros. Hr: 7.745"},
     {fecha:"2025-09-16", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 8.088. Pendiente: filtro hidráulico, pilotaje, aceite 80W-90 traslación."},
     {fecha:"2025-10-02", tipo:"GENERAL",    detalle:"Completado pendiente: filtro hidráulico, filtro pilotaje, aceite 80W-90 motores traslación 30L."},
-    {fecha:"2025-12-15", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 8.262"},
+    {fecha:"2025-12-15", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 8.266"},
   ],
   "TCCW-19": [
     {fecha:"2024-02-13", tipo:"CORRECTIVA", detalle:"Cambio sensor nivel combustible. Constancia juego pasador base boom. Hr: 451"},
     {fecha:"2024-03-06", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros (aceite, petróleo, piloto, aire, AC interior/exterior). Hr: 563"},
-    {fecha:"2024-03-11", tipo:"CORRECTIVA", detalle:"Cambio puntillas balde con seguros y pasadores nuevos. Hr: 518"},
+    {fecha:"2024-03-11", tipo:"CORRECTIVA", detalle:"Cambio puntillas balde con seguros y pasadores nuevos. Hr: 581"},
     {fecha:"2024-05-06", tipo:"CORRECTIVA", detalle:"Cambio puntillas balde. Hr: 869"},
     {fecha:"2024-05-10", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtro aire. Pendiente filtro petróleo. Hr: 895"},
-    {fecha:"2024-07-02", tipo:"GENERAL",    detalle:"Mantención 1.000 hr. Cambio filtros aire primario/secundario, aceite motor, hidráulico retorno, combustible, respiradero hidráulico, AC interior/exterior, separador agua, pilotaje/freno. Correas ventilador y AC. Aceite motor 15W-40 30L, giro 80-90 8L, reductores 80-90 12L. Regulación válvulas motor. Hr: 1.114"},
+    {fecha:"2024-06-02", tipo:"GENERAL",    detalle:"Mantención 1.000 hr. Cambio filtros aire primario/secundario, aceite motor, hidráulico retorno, combustible, respiradero hidráulico, AC interior/exterior, separador agua, pilotaje/freno. Correas ventilador y AC. Aceite motor 15W-40 30L, giro 80-90 8L, reductores 80-90 12L. Regulación válvulas motor. Hr: 1.114"},
     {fecha:"2024-06-12", tipo:"CORRECTIVA", detalle:"Cambio calzas balde con seguro y pasadores. Hr: 1.169"},
     {fecha:"2024-09-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros combustible y aire. Hr: 1.451"},
     {fecha:"2024-09-23", tipo:"CORRECTIVA", detalle:"Relleno aceite hidráulico SAE 68 6L"},
@@ -499,20 +603,46 @@ const HISTORIAL = {
     {fecha:"2025-01-13", tipo:"GENERAL",    detalle:"Cambio aceite eje diferencial delantero. Hr: 6.691"},
     {fecha:"2025-04-14", tipo:"GENERAL",    detalle:"Cambio aceite eje diferencial delantero. Hr: 6.862"},
     {fecha:"2025-04-24", tipo:"GENERAL",    detalle:"Cambio aceite eje diferencial trasero 10W-30 Unitractor. Hr: 6.898"},
+    {fecha:"2025-05-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 + filtros. Hr: 6.988"},
     {fecha:"2025-07-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 18L + filtros. Hr: 7.231"},
     {fecha:"2025-11-05", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 19L + filtros."},
     {fecha:"2025-12-05", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico 180L tipo 46 + filtros hidráulicos. Hr: 7.544"},
   ],
   "SDTP-59": [
-    {fecha:"2024-09-05", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 3.872"},
-    {fecha:"2024-10-31", tipo:"GENERAL",    detalle:"Cambio aceite motor + filtros + transmisión hidráulica + corona delantera."},
-    {fecha:"2024-12-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros y engrase."},
+    {fecha:"2023-03-17", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros (motor, petróleo, aire), engrase completo. Hr: 755"},
+    {fecha:"2023-03-20", tipo:"OTRO",       detalle:"Engrase balde y perno centro"},
+    {fecha:"2023-03-21", tipo:"OTRO",       detalle:"Engrase balde y perno centro"},
+    {fecha:"2023-03-22", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-03-23", tipo:"OTRO",       detalle:"Engrase balde, perno centro y sopleteo filtro"},
+    {fecha:"2023-03-24", tipo:"OTRO",       detalle:"Engrase completo"},
+    {fecha:"2023-04-10", tipo:"OTRO",       detalle:"Hr: 890"},
+    {fecha:"2023-06-09", tipo:"PREVENTIVA", detalle:"Cambio de aceite y filtros. Hr: 1.267"},
+    {fecha:"2023-07-21", tipo:"PREVENTIVA", detalle:"Cambio de aceite. Hr: 1.533"},
+    {fecha:"2023-09-01", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 1.750"},
+    {fecha:"2023-10-17", tipo:"GENERAL",    detalle:"Mantención general: cambio aceite motor 15W-40 26L + aceite ejes AXO80 48L. Hr: 2.086"},
+    {fecha:"2023-10-18", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico 89L. Hr: 2.101"},
+    {fecha:"2023-11-23", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 2.326"},
+    {fecha:"2023-12-06", tipo:"PREVENTIVA", detalle:"Cambio filtro de petróleo. Hr: 2.416"},
+    {fecha:"2024-01-10", tipo:"GENERAL",    detalle:"Mantención general. Hr: 2.597"},
+    {fecha:"2024-02-19", tipo:"GENERAL",    detalle:"Mantención general. Hr: 2.849"},
+    {fecha:"2024-02-23", tipo:"CORRECTIVA", detalle:"Cambio de cuchilla. Hr: 2.884"},
+    {fecha:"2024-04-17", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.105"},
+    {fecha:"2024-06-04", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.358"},
+    {fecha:"2024-07-19", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.608"},
+    {fecha:"2024-09-05", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.873"},
+    {fecha:"2024-10-31", tipo:"GENERAL",    detalle:"Mantención general: aceite motor 15W-40 26L + ejes (424) 48L + hidráulico 10W 89L. + transmisión hidráulica + corona delantera. Hr: 4.150"},
+    {fecha:"2024-12-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros y engrase"},
+    {fecha:"2024-12-23", tipo:"PREVENTIVA", detalle:"Mantención preventiva, pendiente filtro primario. Hr: 4.457"},
     {fecha:"2025-02-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 4.722"},
-    {fecha:"2025-03-25", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 4.997"},
-    {fecha:"2025-08-21", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 5.795"},
-    {fecha:"2025-10-05", tipo:"GENERAL",    detalle:"Cambio aceite motor 24L + mandos finales 10W-30 60L + transmisión 10W-30 8L + hidráulico 80W-90 90L. Hr: 6.033"},
-    {fecha:"2025-12-01", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros."},
+    {fecha:"2025-03-25", tipo:"PREVENTIVA", detalle:"Mantención preventiva, se voltea cuchilla. Hr: 4.997"},
+    {fecha:"2025-05-12", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 5.268"},
+    {fecha:"2025-06-30", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 5.548"},
+    {fecha:"2025-07-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 5.795"},
+    {fecha:"2025-10-05", tipo:"GENERAL",    detalle:"Mantención general: aceite motor 15W-40 + mandos finales 10W-30 60L + transmisión 10W-30 8L + hidráulico 80W-90 90L. Hr: 6.036"},
+    {fecha:"2025-11-30", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 6.355"},
     {fecha:"2026-01-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros. Hr: 6.647"},
+    {fecha:"2026-03-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros. Hr: 6.922"},
+    {fecha:"2026-04-20", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 7.166"},
   ],
   "RHRB-94": [
     {fecha:"2024-10-24", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
@@ -524,6 +654,46 @@ const HISTORIAL = {
   ],
 };
 
+/* ═══════════════════════ CATEGORÍAS ═══════════════════════ */
+const CATEGORIES = [
+  {id:"CARGADOR",   label:"Cargadores Frontales", icon:"🚜"},
+  {id:"CAMION",     label:"Camiones Tolva",        icon:"🚛"},
+  {id:"EXCAVADORA", label:"Excavadoras",           icon:"🏗️"},
+  {id:"CAMIONETA",  label:"Camionetas",            icon:"🛻"},
+  {id:"GENERADOR",  label:"Generadores",           icon:"⚡"},
+  {id:"BATEA",      label:"Bateas",                icon:"📦"},
+  {id:"CAMA_BAJA",  label:"Camas Bajas",           icon:"🛤️"},
+];
+
+const BRANDS = {
+  CAMION:["Mack","Volkswagen","Renault"], CARGADOR:["Komatsu","Hyundai"],
+  EXCAVADORA:["Develon","Hyundai"], GENERADOR:["BSG","Hechizo"],
+  CAMIONETA:["Maxus","Peugeot"], BATEA:["Randon"], CAMA_BAJA:["Schilger"],
+};
+
+function platesFor(cat, marca) {
+  if (marca==="Mack")       return ["DFLW-71","DRHK-42","DHXR-54","WY-8717"];
+  if (marca==="Volkswagen") return ["RHGC-83","RKSC-25"];
+  if (marca==="Renault")    return ["SW-6114"];
+  if (marca==="Komatsu")    return ["SDTP-59"];
+  if (marca==="Hyundai") {
+    if (cat==="CARGADOR")   return ["LXDT-19"];
+    if (cat==="EXCAVADORA") return ["LVGS-87","HDWS-49"];
+  }
+  if (marca==="Develon")  return ["TCCW-19"];
+  if (marca==="Maxus")    return ["RHRB-94"];
+  if (marca==="Peugeot")  return ["TTVR-19"];
+  if (marca==="Randon")   return ["JL-8263"];
+  if (marca==="Schilger") return ["JH-4921"];
+  return [];
+}
+
+const OPERATORS = [
+  "Eligio Miranda","Patricio Obando","Salomón Fernández","Segundo Gómez",
+  "Fernando Gueicha","Francisco Bahamonde","Pedro Espinoza",
+  "Cecilia Sandoval","Ignacio Echeverría"
+];
+
 /* ═══════════════════════ UTILS ═══════════════════════ */
 function fmt(n,dec=0){if(n==null||Number.isNaN(+n))return"—";return Number(n).toLocaleString("es-CL",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
 const todayISO=()=>{const d=new Date();d.setHours(0,0,0,0);const p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
@@ -534,7 +704,6 @@ function workHrs(a,b){const A=parseISO(a),B=parseISO(b||todayISO());if(!A||!B)re
 function addYears(iso,y=1){const d=parseISO(iso);if(!d)return null;d.setFullYear(d.getFullYear()+y);return d.toISOString().slice(0,10);}
 function estadoPorDias(d,h){if(d<=0)return"VENCIDA";if(d<=7)return"URGENTE";if(d<=h)return"PRONTO";return"OK";}
 
-/* ═══════════════════════ BADGE ═══════════════════════ */
 function badgeSt(e){
   if(!e)return{bg:"#e2e8f0",fg:P.txtBody};
   if(e==="VENCIDA")return{bg:P.red,fg:"#fff"};
@@ -548,7 +717,6 @@ const Badge=({e})=>{
   return <span style={{background:s.bg,color:s.fg,padding:"3px 10px",borderRadius:8,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.04em",display:"inline-block"}}>{e}</span>;
 };
 
-/* ═══════════════════════ CONTROLES ═══════════════════════ */
 const iBase={width:"100%",padding:"9px 13px",borderRadius:10,border:`2px solid ${P.border}`,background:P.card,color:P.txtTitle,fontSize:14,fontWeight:600,outline:"none",boxSizing:"border-box"};
 const Inp=({sx={},...p})=><input style={{...iBase,...sx}} {...p} onFocus={e=>e.target.style.borderColor=P.blue} onBlur={e=>e.target.style.borderColor=P.border}/>;
 const Sel=({sx={},children,...p})=><select style={{...iBase,...sx}} {...p}>{children}</select>;
@@ -556,10 +724,9 @@ const Lbl=({c=P.txtLabel,children})=><label style={{display:"block",fontSize:11,
 const Sec=({c=P.txtMuted,mb=14,children})=><p style={{fontSize:11,fontWeight:700,color:c,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:mb}}>{children}</p>;
 const Btn=({v="primary",sx={},children,...p})=>{
   const vs={
-    primary:  {bg:P.blue,   fg:"#fff"},
-    secondary:{bg:P.card,   fg:P.txtTitle, border:`2px solid ${P.border}`},
-    danger:   {bg:P.red,    fg:"#fff"},
-    success:  {bg:P.green,  fg:"#fff"},
+    primary:  {bg:P.blue,  fg:"#fff"},
+    secondary:{bg:P.card,  fg:P.txtTitle, border:`2px solid ${P.border}`},
+    danger:   {bg:P.red,   fg:"#fff"},
   };
   const s=vs[v]||vs.primary;
   return(
@@ -621,12 +788,10 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
         <Sec c={P.txtLight}>Control Legal</Sec>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:18}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <span style={{color:P.txtLight,fontSize:14,fontWeight:600}}>Revisión Técnica</span>
-            <Badge e={estRT}/>
+            <span style={{color:P.txtLight,fontSize:14,fontWeight:600}}>Revisión Técnica</span><Badge e={estRT}/>
           </div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <span style={{color:P.txtLight,fontSize:14,fontWeight:600}}>Permiso Circulación</span>
-            <Badge e={estPC}/>
+            <span style={{color:P.txtLight,fontSize:14,fontWeight:600}}>Permiso Circulación</span><Badge e={estPC}/>
           </div>
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -713,20 +878,16 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
 
 /* ═══════════════════════ HISTORIAL PANEL ═══════════════════════ */
 const TIPO_COLORS = {
-  PREVENTIVA: {bg:"#dbeafe", fg:"#1d4ed8", label:"Preventiva"},
-  GENERAL:    {bg:"#dcfce7", fg:"#166534", label:"General"},
-  CORRECTIVA: {bg:"#fff7ed", fg:"#c2410c", label:"Correctiva"},
-  CORRECTIVO: {bg:"#fff7ed", fg:"#c2410c", label:"Correctiva"},
-  OTRO:       {bg:"#f1f5f9", fg:"#475569", label:"Otro"},
+  PREVENTIVA:{bg:"#dbeafe",fg:"#1d4ed8",label:"Preventiva"},
+  GENERAL:   {bg:"#dcfce7",fg:"#166534",label:"General"},
+  CORRECTIVA:{bg:"#fff7ed",fg:"#c2410c",label:"Correctiva"},
+  OTRO:      {bg:"#f1f5f9",fg:"#475569",label:"Otro"},
 };
 
 function HistorialPanel({patente}){
-  const items = HISTORIAL[patente];
-  if(!items||items.length===0) return null;
-
-  // Todas las intervenciones, más reciente primero
-  const ordenadas = [...items].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-
+  const items=HISTORIAL[patente];
+  if(!items||items.length===0)return null;
+  const ordenadas=[...items].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
   return(
     <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:20,boxShadow:"0 1px 4px rgba(0,0,0,0.06)"}}>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
@@ -736,13 +897,13 @@ function HistorialPanel({patente}){
         </p>
         <span style={{fontSize:11,color:P.txtDim,fontWeight:500}}>— {ordenadas.length} registros</span>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {ordenadas.map((item,i)=>{
           const tc=TIPO_COLORS[item.tipo]||TIPO_COLORS.OTRO;
           const fecha=new Date(item.fecha+"T12:00:00").toLocaleDateString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric"});
           return(
-            <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"10px 14px",background:"#f8fafc",borderRadius:10,border:`1px solid ${P.border}`}}>
-              <div style={{flexShrink:0,minWidth:80}}>
+            <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"9px 12px",background:"#f8fafc",borderRadius:9,border:`1px solid ${P.border}`}}>
+              <div style={{flexShrink:0,minWidth:76}}>
                 <span style={{fontSize:11,fontWeight:600,color:P.txtMuted}}>{fecha}</span>
               </div>
               <div style={{flexShrink:0}}>
@@ -767,50 +928,29 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
   const esBOC=["BATEA","CAMA_BAJA"].includes(e.categoria);
   const lbl=esCam?"Odómetro":"Horómetro", unit=esCam?"km":"h";
 
-  // Al seleccionar patente: carga TODOS los datos del MAESTRO automáticamente
   const handlePatente=(nueva)=>{
     const m=MAESTRO[nueva];
     if(m){
-      upd({
-        patente:nueva,
-        modelo:m.modelo,
-        preventivaCada:m.preventivaCada,
-        generalCada:m.generalCada,
-        horaActual:m.horaActual,
-        horaActualFecha:m.horaActualFecha,
-        ultimaPreventivaHora:m.ultimaPreventivaHora,
-        ultimaGeneralHora:m.ultimaGeneralHora,
-        insumosPrev:[...m.insumosPrev],
-        insumosGen:[...m.insumosGen],
-      });
-    } else {
-      upd({patente:nueva});
-    }
+      upd({patente:nueva,modelo:m.modelo,preventivaCada:m.preventivaCada,generalCada:m.generalCada,
+        horaActual:m.horaActual,horaActualFecha:m.horaActualFecha,
+        ultimaPreventivaHora:m.ultimaPreventivaHora,ultimaGeneralHora:m.ultimaGeneralHora,
+        insumosPrev:[...m.insumosPrev],insumosGen:[...m.insumosGen]});
+    } else { upd({patente:nueva}); }
   };
 
-  // Botón restablecer: sobreescribe todo con datos oficiales
   const restablecer=()=>{
     const m=MAESTRO[e.patente];
     if(!m)return;
-    if(window.confirm(`¿Restablecer datos oficiales de ${e.patente}?\nEsto sobreescribirá horómetro, fechas e insumos.\nEl historial se carga automáticamente.`)){
-      upd({
-        modelo:m.modelo,
-        preventivaCada:m.preventivaCada,
-        generalCada:m.generalCada,
-        horaActual:m.horaActual,
-        horaActualFecha:m.horaActualFecha,
-        ultimaPreventivaHora:m.ultimaPreventivaHora,
-        ultimaGeneralHora:m.ultimaGeneralHora,
-        insumosPrev:[...m.insumosPrev],
-        insumosGen:[...m.insumosGen],
-      });
+    if(window.confirm(`¿Restablecer datos oficiales de ${e.patente}?\nSobreescribirá horómetro, fechas e insumos con los datos del registro oficial.`)){
+      upd({modelo:m.modelo,preventivaCada:m.preventivaCada,generalCada:m.generalCada,
+        horaActual:m.horaActual,horaActualFecha:m.horaActualFecha,
+        ultimaPreventivaHora:m.ultimaPreventivaHora,ultimaGeneralHora:m.ultimaGeneralHora,
+        insumosPrev:[...m.insumosPrev],insumosGen:[...m.insumosGen]});
     }
   };
 
   return(
     <div style={{display:"grid",gridTemplateColumns:"minmax(0,3fr) minmax(0,1fr)",gap:20,alignItems:"start"}}>
-
-      {/* COLUMNA PRINCIPAL */}
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
 
         {/* Identificación */}
@@ -859,13 +999,11 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
               <span>📍</span> Lectura Actual
             </p>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-              <div>
-                <Lbl c="#fff">{lbl} ({unit})</Lbl>
+              <div><Lbl c="#fff">{lbl} ({unit})</Lbl>
                 <input type="number" style={{width:"100%",padding:"13px 16px",borderRadius:12,background:"#fff",color:"#1e3a8a",fontWeight:900,fontSize:26,border:"none",outline:"none",boxSizing:"border-box"}}
                   value={e.horaActual||""} onChange={v=>upd({horaActual:Number(v.target.value)})} placeholder="0"/>
               </div>
-              <div>
-                <Lbl c="#fff">Fecha de Lectura</Lbl>
+              <div><Lbl c="#fff">Fecha de Lectura</Lbl>
                 <input type="date" style={{width:"100%",padding:"13px 16px",borderRadius:12,background:"#fff",color:"#1e3a8a",fontWeight:600,fontSize:15,border:"none",outline:"none",boxSizing:"border-box"}}
                   value={e.horaActualFecha||""} onChange={v=>upd({horaActualFecha:v.target.value})}/>
               </div>
@@ -880,13 +1018,11 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
               <span>🛣️</span> Odómetro Complementario (km)
             </p>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-              <div>
-                <Lbl c="#fff">Km Actual</Lbl>
+              <div><Lbl c="#fff">Km Actual</Lbl>
                 <input type="number" style={{width:"100%",padding:"12px 14px",borderRadius:10,background:"#334155",color:"#fff",fontWeight:900,fontSize:22,border:"none",outline:"none",boxSizing:"border-box"}}
                   placeholder="0" value={e.odometro||""} onChange={v=>upd({odometro:Number(v.target.value)})}/>
               </div>
-              <div>
-                <Lbl c="#fff">Fecha</Lbl>
+              <div><Lbl c="#fff">Fecha</Lbl>
                 <input type="date" style={{width:"100%",padding:"12px 14px",borderRadius:10,background:"#334155",color:"#fff",fontWeight:500,fontSize:14,border:"none",outline:"none",boxSizing:"border-box"}}
                   value={e.odometroFecha||""} onChange={v=>upd({odometroFecha:v.target.value})}/>
               </div>
@@ -940,7 +1076,7 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
         <HistorialPanel patente={e.patente}/>
       </div>
 
-      {/* PANEL LATERAL */}
+      {/* Panel lateral */}
       <div style={{display:"flex",flexDirection:"column",gap:12}}>
         <StatusPanel s={s} e={e} unit={unit} esCamioneta={esCam} upd={upd}/>
         <Btn v="danger" sx={{width:"100%",padding:"12px"}} onClick={()=>removeEquipo(e.id)}>
@@ -1037,7 +1173,6 @@ export default function App(){
     </div>
   );
 
-  /* INICIO */
   if(!view.cat)return(
     <div style={pageStyle}>
       <header style={{marginBottom:24,paddingBottom:18,borderBottom:`4px solid ${P.dark}`}}>
@@ -1073,7 +1208,6 @@ export default function App(){
     </div>
   );
 
-  /* LISTADO */
   if(view.cat&&!view.id){
     const cat=CATEGORIES.find(c=>c.id===view.cat);
     const ecs=equipos.filter(e=>e.categoria===view.cat);
@@ -1122,7 +1256,6 @@ export default function App(){
     );
   }
 
-  /* FICHA */
   const eq=equipos.find(x=>x.id===view.id);
   return(
     <div style={{padding:24,maxWidth:1300,margin:"0 auto",minHeight:"100vh",background:P.page}}>
