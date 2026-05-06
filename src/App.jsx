@@ -631,7 +631,6 @@ const HISTORIAL = {
     {fecha:"2024-07-19", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.608"},
     {fecha:"2024-09-05", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.873"},
     {fecha:"2024-10-31", tipo:"GENERAL",    detalle:"Mantención general: aceite motor 15W-40 26L + ejes (424) 48L + hidráulico 10W 89L. + transmisión hidráulica + corona delantera. Hr: 4.150"},
-    {fecha:"2024-12-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros y engrase"},
     {fecha:"2024-12-23", tipo:"PREVENTIVA", detalle:"Mantención preventiva, pendiente filtro primario. Hr: 4.457"},
     {fecha:"2025-02-08", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros. Hr: 4.722"},
     {fecha:"2025-03-25", tipo:"PREVENTIVA", detalle:"Mantención preventiva, se voltea cuchilla. Hr: 4.997"},
