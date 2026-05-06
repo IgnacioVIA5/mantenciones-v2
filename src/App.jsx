@@ -813,7 +813,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
         <span style={{color:P.txtLight,fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.05em"}}>{label}</span>
         <Badge e={est}/>
       </div>
-      {!est.includes("LECTURA")&&!est.includes("PREV")&&!est.includes("GEN")?(
+      {(est==="OK"||est==="PRONTO"||est==="URGENTE"||est==="VENCIDA")?(
         est==="VENCIDA"?(
           <>
             <p style={{fontSize:30,fontWeight:900,color:P.redLight,lineHeight:1,margin:0}}>
