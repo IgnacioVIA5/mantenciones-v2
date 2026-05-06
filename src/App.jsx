@@ -173,8 +173,8 @@ const MAESTRO = {
   },
   "TCCW-19": {
     modelo:"Develon DX225LX-7M", preventivaCada:250, generalCada:2000,
-    horaActual:3760, horaActualFecha:"2026-01-22",
-    ultimaPreventivaHora:3760, ultimaGeneralHora:3510,
+    horaActual:3852, horaActualFecha:"2026-04-02",
+    ultimaPreventivaHora:3852, ultimaGeneralHora:3510,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",                cant:35, enBodega:false},
       {tipo:"Filtro", nombre:"Aire primario ARS4844",        cant:1,  enBodega:false},
@@ -298,6 +298,7 @@ const HISTORIAL = {
     {fecha:"2026-01-12", tipo:"PREVENTIVA", detalle:"Cambio filtro de aire. Hr: 12.023 / Km: 361.181"},
     {fecha:"2026-01-30", tipo:"CORRECTIVA", detalle:"Cambio abrazadera lado izquierdo y una hoja trasera"},
     {fecha:"2026-03-02", tipo:"OTRO",       detalle:"Engrase completo. Hr: 12.144 / Km: 362.695"},
+    {fecha:"2026-04-27", tipo:"CORRECTIVA", detalle:"Cambio de neumático"},
   ],
   "DRHK-42": [
     {fecha:"2024-11-06", tipo:"OTRO",       detalle:"Ingreso equipo. Engrase completo. Km: 158.420"},
@@ -321,6 +322,7 @@ const HISTORIAL = {
     {fecha:"2025-11-13", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 38L + filtros completos. Hr: 10.284 / Km: 167.590"},
     {fecha:"2025-11-20", tipo:"CORRECTIVA", detalle:"Cambio pulmón de freno. Pendiente válvula repartidora de aire."},
     {fecha:"2025-11-25", tipo:"CORRECTIVA", detalle:"Reparación estanque hidráulico."},
+    {fecha:"2026-04-29", tipo:"CORRECTIVA", detalle:"Embalado 8 mazas. Cambio 4 retenes maza, 4 chicharras freno. Relleno aceite corona 20L 80W-90. Relleno aceite motor 5L 15W-40"},
   ],
   "DHXR-54": [
     {fecha:"2023-05-17", tipo:"OTRO",       detalle:"Engrase completo"},
@@ -585,6 +587,7 @@ const HISTORIAL = {
     {fecha:"2025-11-10", tipo:"CORRECTIVA", detalle:"Reparación balde: cambio fondo, refuerzo cuchillas, soldadura planchas laterales. Hr: 3.197"},
     {fecha:"2025-11-13", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.214"},
     {fecha:"2026-01-22", tipo:"GENERAL",    detalle:"Cambio aceite motor 15W-40 35L + filtros. Hr: 3.510"},
+    {fecha:"2026-04-02", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 32L + filtros. Hr: 3.852"},
   ],
   "LXDT-19": [
     {fecha:"2023-03-17", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros (aceite, petróleo y aire). Hr: 5.157"},
@@ -642,6 +645,7 @@ const HISTORIAL = {
     {fecha:"2026-01-22", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros. Hr: 6.647"},
     {fecha:"2026-03-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros. Hr: 6.922"},
     {fecha:"2026-04-20", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 7.166"},
+    {fecha:"2026-04-18", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 24L + filtros."},
   ],
   "RHRB-94": [
     {fecha:"2024-10-24", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros"},
@@ -1142,22 +1146,24 @@ export default function App(){
         :workHrs(e.horaActualFecha,todayISO()))
       :0;
     const ha=Number(e.horaActual||0)+Math.max(0,elapsed);
+    const ultPrev = Number(e.ultimaPreventivaHora||0);
+    const ultGen  = Number(e.ultimaGeneralHora||0);
     let ep="OK",eg="OK";
     if(!esCam){
-      if(!e.horaActual||e.horaActual===0)ep="⚠️ LECTURA";
-      else if(!e.ultimaPreventivaHora||e.ultimaPreventivaHora===0)ep="⚙️ PREV";
-      else{const r=(Number(e.ultimaPreventivaHora)+prevCada)-ha;if(r<=0)ep="VENCIDA";else if(r<=urgenteLim)ep="URGENTE";else if(r<=prontoLim)ep="PRONTO";}
+      if(!e.horaActual||Number(e.horaActual)===0)ep="⚠️ LECTURA";
+      else if(!ultPrev||ultPrev===0)ep="⚙️ PREV";
+      else{const r=(ultPrev+prevCada)-ha;if(r<=0)ep="VENCIDA";else if(r<=urgenteLim)ep="URGENTE";else if(r<=prontoLim)ep="PRONTO";}
     }
-    if(!e.horaActual||e.horaActual===0)eg="⚠️ LECTURA";
-    else if(!e.ultimaGeneralHora||e.ultimaGeneralHora===0)eg="🛠️ GEN";
-    else{const r=(Number(e.ultimaGeneralHora)+genCada)-ha;if(r<=0)eg="VENCIDA";else if(r<=urgenteLim)eg="URGENTE";else if(r<=prontoLim)eg="PRONTO";}
+    if(!e.horaActual||Number(e.horaActual)===0)eg="⚠️ LECTURA";
+    else if(!ultGen||ultGen===0)eg="🛠️ GEN";
+    else{const r=(ultGen+genCada)-ha;if(r<=0)eg="VENCIDA";else if(r<=urgenteLim)eg="URGENTE";else if(r<=prontoLim)eg="PRONTO";}
     const pr={VENCIDA:6,URGENTE:5,"⚠️ LECTURA":4,"⚙️ PREV":3,"🛠️ GEN":2,PRONTO:1,OK:0};
     const worst=esCam?eg:(pr[ep]>=pr[eg]?ep:eg);
     return{horaActual:ha,
-      proxPrev:Number(e.ultimaPreventivaHora||0)+prevCada,
-      proxGen: Number(e.ultimaGeneralHora||0)+genCada,
-      restPrev:(Number(e.ultimaPreventivaHora||0)+prevCada)-ha,
-      restGen: (Number(e.ultimaGeneralHora||0)+genCada)-ha,
+      proxPrev:ultPrev+prevCada,
+      proxGen: ultGen+genCada,
+      restPrev:(ultPrev+prevCada)-ha,
+      restGen: (ultGen+genCada)-ha,
       estPrev:ep,estGen:eg,salud:worst};
   },[]);
 
