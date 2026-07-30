@@ -1154,6 +1154,8 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                 <Inp type="number" value={e.generalCadaKm||""} placeholder="ej: 40000" onChange={v=>upd({generalCadaKm:Number(v.target.value)||null})}/></div>}
               <div style={{flex:1,minWidth:120}}><Lbl>{unit} Proyectadas / Día</Lbl>
                 <Inp type="number" value={e.horasDiariasOverride||""} placeholder="ej: 8" onChange={v=>upd({horasDiariasOverride:Number(v.target.value)})}/></div>
+              {esCamion&&<div style={{flex:1,minWidth:120}}><Lbl>km Proyectados / Día</Lbl>
+                <Inp type="number" value={e.kmDiariosOverride||""} placeholder="ej: 15" onChange={v=>upd({kmDiariosOverride:Number(v.target.value)})}/></div>}
             </div>
           </div>
         )}
@@ -1268,15 +1270,17 @@ export default function App(){
     const esCamion=e.categoria==="CAMION";
     // Gana la lectura más reciente: si el odómetro se actualizó después que el horómetro, se calcula por km; en empate o si el horómetro es más nuevo, predomina el horómetro.
     const kmMasReciente=esCamion&&!!e.odometroFecha&&(!e.horaActualFecha||e.odometroFecha>e.horaActualFecha);
+    // Entre lecturas reales de odómetro, se proyecta el avance con un ritmo estándar (km/día) configurado por camión.
+    const elapsedKm=e.odometroFecha?Math.max(0,daysBetween(e.odometroFecha,todayISO())*Number(e.kmDiariosOverride||0)):0;
+    const kmAct=Number(e.odometro||0)+elapsedKm;
     const prevCadaKm=Number(e.preventivaCadaKm||0);
     const useKmForPrev=esCamion&&prevCadaKm>0&&kmMasReciente;
     let proxPrevKm=0,restPrevKm=0;
     if(useKmForPrev){
       const ultPrevKm=Number(e.ultimaPreventivaKm||0);
-      const kmAct=Number(e.odometro||0);
       proxPrevKm=ultPrevKm+prevCadaKm;
       restPrevKm=proxPrevKm-kmAct;
-      if(!kmAct)ep="⚠️ LECTURA";
+      if(!Number(e.odometro||0))ep="⚠️ LECTURA";
       else if(!ultPrevKm)ep="⚙️ PREV";
       else if(restPrevKm<=0)ep="VENCIDA";
       else if(restPrevKm<=1000)ep="URGENTE";
@@ -1288,10 +1292,9 @@ export default function App(){
     let proxGenKm=0,restGenKm=0;
     if(useKmForGen){
       const ultGenKm=Number(e.ultimaGeneralKm||0);
-      const kmAct=Number(e.odometro||0);
       proxGenKm=ultGenKm+genCadaKm;
       restGenKm=proxGenKm-kmAct;
-      if(!kmAct)eg="⚠️ LECTURA";
+      if(!Number(e.odometro||0))eg="⚠️ LECTURA";
       else if(!ultGenKm)eg="🛠️ GEN";
       else if(restGenKm<=0)eg="VENCIDA";
       else if(restGenKm<=1000)eg="URGENTE";
