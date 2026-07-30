@@ -30,13 +30,15 @@ const P = {
   txtLabel:"#1e293b", txtMuted:"#64748b", txtDim:"#94a3b8",
   txtLight:"#e2e8f0", txtWhite:"#ffffff",
   red:"#dc2626", redLight:"#fca5a5", orange:"#f97316",
-  yellow:"#facc15", green:"#16a34a", blue:"#2563eb",
+  yellow:"#facc15", green:"#16a34a", blue:"#188038",
 };
+const FF="'Barlow Condensed','Arial Narrow',sans-serif";
+const FFb="'Barlow','Barlow Condensed',Arial,sans-serif";
 
 /* ═══════════════════════ DATOS MAESTROS ═══════════════════════ */
 const MAESTRO = {
   "DFLW-71": {
-    modelo:"Mack Granite", preventivaCada:300, generalCada:2000,
+    modelo:"Mack Granite", m3:20, preventivaCada:300, generalCada:2000,
     horaActual:12256, horaActualFecha:"2026-04-29",
     ultimaPreventivaHora:12023, ultimaGeneralHora:0,
     insumosPrev:[
@@ -50,7 +52,7 @@ const MAESTRO = {
     insumosGen:[],
   },
   "DRHK-42": {
-    modelo:"Mack Granite CT6", preventivaCada:300, generalCada:2000,
+    modelo:"Mack Granite CT6", m3:21, preventivaCada:300, generalCada:2000,
     horaActual:10284, horaActualFecha:"2025-11-13",
     ultimaPreventivaHora:10284, ultimaGeneralHora:0,
     insumosPrev:[
@@ -64,7 +66,7 @@ const MAESTRO = {
     insumosGen:[],
   },
   "DHXR-54": {
-    modelo:"Mack Granite", preventivaCada:300, generalCada:2000,
+    modelo:"Mack Granite", m3:15, preventivaCada:300, generalCada:2000,
     horaActual:15692, horaActualFecha:"2026-03-19",
     ultimaPreventivaHora:0, ultimaGeneralHora:0,
     insumosPrev:[
@@ -78,7 +80,7 @@ const MAESTRO = {
     insumosGen:[],
   },
   "WY-8717": {
-    modelo:"Mack", preventivaCada:300, generalCada:2000,
+    modelo:"Mack", m3:21, preventivaCada:300, generalCada:2000,
     horaActual:0, horaActualFecha:"", ultimaPreventivaHora:0, ultimaGeneralHora:0,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",              cant:38, enBodega:false},
@@ -91,7 +93,7 @@ const MAESTRO = {
     insumosGen:[],
   },
   "RHGC-83": {
-    modelo:"Volkswagen Constellation", preventivaCada:300, generalCada:2000,
+    modelo:"Volkswagen Constellation", m3:14, preventivaCada:300, generalCada:2000,
     horaActual:7482, horaActualFecha:"2026-04-02",
     ultimaPreventivaHora:7457, ultimaGeneralHora:0,
     insumosPrev:[
@@ -109,7 +111,7 @@ const MAESTRO = {
     ],
   },
   "RKSC-25": {
-    modelo:"Volkswagen Constellation", preventivaCada:300, generalCada:2000,
+    modelo:"Volkswagen Constellation", m3:14, preventivaCada:300, generalCada:2000,
     horaActual:8091, horaActualFecha:"2026-04-02",
     ultimaPreventivaHora:8091, ultimaGeneralHora:7634,
     insumosPrev:[
@@ -133,25 +135,6 @@ const MAESTRO = {
       {tipo:"Filtro", nombre:"Petróleo", cant:3, enBodega:false},
     ],
     insumosGen:[],
-  },
-  "HDWS-49": {
-    modelo:"Hyundai R220", preventivaCada:250, generalCada:2000,
-    horaActual:11275, horaActualFecha:"2026-01-28",
-    ultimaPreventivaHora:11181, ultimaGeneralHora:10933,
-    insumosPrev:[
-      {tipo:"Aceite", nombre:"Motor 15W-40",            cant:23, enBodega:false},
-      {tipo:"Filtro", nombre:"Aceite PSL280",            cant:1,  enBodega:false},
-      {tipo:"Filtro", nombre:"Petróleo PSC410",          cant:1,  enBodega:false},
-      {tipo:"Filtro", nombre:"Petróleo BF788 / CX0708",  cant:1,  enBodega:false},
-      {tipo:"Filtro", nombre:"Petróleo BF1329",          cant:1,  enBodega:false},
-      {tipo:"Filtro", nombre:"Aire primario RS3517",     cant:1,  enBodega:false},
-      {tipo:"Filtro", nombre:"Aire secundario RS3717",   cant:1,  enBodega:false},
-    ],
-    insumosGen:[
-      {tipo:"Aceite", nombre:"Mandos finales 10W-30",    cant:60, enBodega:false},
-      {tipo:"Aceite", nombre:"Transmisión 10W-30",       cant:8,  enBodega:false},
-      {tipo:"Aceite", nombre:"Hidráulico 80W-90",        cant:90, enBodega:false},
-    ],
   },
   "LVGS-87": {
     modelo:"Hyundai LC220", preventivaCada:250, generalCada:2000,
@@ -532,15 +515,6 @@ const HISTORIAL = {
   "SW-6114": [
     {fecha:"2025-01-14", tipo:"PREVENTIVA", detalle:"Cambio 3 filtros petróleo, limpieza chupador estanque petróleo."},
   ],
-  "HDWS-49": [
-    {fecha:"2023-03-23", tipo:"GENERAL",    detalle:"Reparación reductor de giro: rodamiento superior, retén aceite, conjunto planetario, piñón central inferior. Aceite 85W-140. Cambio aceite hidráulico SAE 68 con todos los filtros. Hr: 10.466"},
-    {fecha:"2023-03-27", tipo:"OTRO",       detalle:"Listado reparaciones pendientes: bujes/pasadores balde, cilindros gemelas, marcador combustible, tapas batería, pisadera, radio, AC, katalinas rueda motriz, pérdida aceite mandos cabina. Hr: 10.468"},
-    {fecha:"2023-03-30", tipo:"CORRECTIVA", detalle:"Cambio puntillas nuevas de balde. Hr: 10.494"},
-    {fecha:"2023-07-03", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + relleno aceite hidráulico SAE 68. Hr: 10.672"},
-    {fecha:"2023-10-07", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros completos. Hr: 10.933"},
-    {fecha:"2025-12-12", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 23L + filtros. Hr: 11.181"},
-    {fecha:"2026-01-28", tipo:"CORRECTIVA", detalle:"Cambio calzas balde N°103352TL. Hr: 11.275"},
-  ],
   "LVGS-87": [
     {fecha:"2023-03-20", tipo:"OTRO",       detalle:"Engrase completo. Pendiente: bujes/pasadores botellas, gemelas, balde, cambio aceite hidráulico, mandos finales. Hr: 5.271"},
     {fecha:"2023-04-03", tipo:"GENERAL",    detalle:"Cambio aceite mandos finales y reductor de giro 85W-140. Hr: 5.307"},
@@ -588,6 +562,7 @@ const HISTORIAL = {
     {fecha:"2025-11-13", tipo:"PREVENTIVA", detalle:"Mantención preventiva. Hr: 3.214"},
     {fecha:"2026-01-22", tipo:"GENERAL",    detalle:"Cambio aceite motor 15W-40 35L + filtros. Hr: 3.510"},
     {fecha:"2026-04-02", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 32L + filtros. Hr: 3.852"},
+    {fecha:"2026-06-03", tipo:"GENERAL",    detalle:"Mantención general. Cambio aceite motor, hidráulico, tornamesa y mandos finales. Filtros: petróleo, hidráulico, aire, polen cabina y polen exterior. Hr: 4.103"},
   ],
   "LXDT-19": [
     {fecha:"2023-03-17", tipo:"PREVENTIVA", detalle:"Cambio aceite motor + filtros (aceite, petróleo y aire). Hr: 5.157"},
@@ -681,7 +656,7 @@ function platesFor(cat, marca) {
   if (marca==="Komatsu")    return ["SDTP-59"];
   if (marca==="Hyundai") {
     if (cat==="CARGADOR")   return ["LXDT-19"];
-    if (cat==="EXCAVADORA") return ["LVGS-87","HDWS-49"];
+    if (cat==="EXCAVADORA") return ["LVGS-87"];
   }
   if (marca==="Develon")  return ["TCCW-19"];
   if (marca==="Maxus")    return ["RHRB-94"];
@@ -699,6 +674,7 @@ const OPERATORS = [
 
 /* ═══════════════════════ UTILS ═══════════════════════ */
 function fmt(n,dec=0){if(n==null||Number.isNaN(+n))return"—";const v=Number(n);return(v===0?0:v).toLocaleString("es-CL",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function fmtFecha(iso){if(!iso)return"";const[y,m,d]=iso.split("-");return`${d}-${m}-${y}`;}
 const todayISO=()=>{const d=new Date();d.setHours(0,0,0,0);const p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
 function parseISO(d){if(!d)return null;const[y,m,da]=String(d).split("-").map(Number);if(!y||!m||!da)return null;const dt=new Date(y,m-1,da);return isNaN(dt)?null:dt;}
 function daysBetween(a,b){const A=parseISO(a),B=parseISO(b||todayISO());if(!A||!B)return 0;return Math.round((new Date(B).setHours(0,0,0,0)-new Date(A).setHours(0,0,0,0))/86400000);}
@@ -706,6 +682,11 @@ const WS={1:9,2:9,3:9,4:9,5:8,6:0,0:0};
 function workHrs(a,b){const A=parseISO(a),B=parseISO(b||todayISO());if(!A||!B)return 0;let t=0;const c=new Date(A);while(c<=B){t+=WS[c.getDay()]||0;c.setDate(c.getDate()+1);}return t;}
 function addYears(iso,y=1){const d=parseISO(iso);if(!d)return null;d.setFullYear(d.getFullYear()+y);return d.toISOString().slice(0,10);}
 function estadoPorDias(d,h){if(d<=0)return"VENCIDA";if(d<=7)return"URGENTE";if(d<=h)return"PRONTO";return"OK";}
+function ultimaFechaHist(patente,tipo){
+  const items=(HISTORIAL[patente]||[]).filter(i=>i.tipo===tipo);
+  if(!items.length)return null;
+  return items.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))[0].fecha;
+}
 
 function badgeSt(e){
   if(!e)return{bg:"#e2e8f0",fg:P.txtBody};
@@ -741,6 +722,32 @@ const Btn=({v="primary",sx={},children,...p})=>{
 };
 
 /* ═══════════════════════ INSUMOS TABLE ═══════════════════════ */
+function InsumoRow({r,i,value,onChange}){
+  const [nombre,setNombre]=useState(r.nombre);
+  useEffect(()=>setNombre(r.nombre),[r.nombre]);
+  return(
+    <div style={{display:"flex",flexWrap:"wrap",gap:6,alignItems:"center",background:P.card,padding:"7px 10px",borderRadius:9,border:`1px solid ${P.border}`,marginBottom:6}}>
+      <select value={r.tipo} onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,tipo:e.target.value}:x))}
+        style={{fontSize:11,fontWeight:600,border:"none",background:"#f1f5f9",borderRadius:6,padding:"3px 6px",color:P.txtTitle}}>
+        <option>Filtro</option><option>Aceite</option><option>Otro</option>
+      </select>
+      <input style={{fontSize:12,flex:1,padding:"3px 8px",borderRadius:6,border:`1px solid ${P.border}`,outline:"none",color:P.txtTitle,minWidth:70}}
+        placeholder="Descripción..." value={nombre}
+        onChange={e=>setNombre(e.target.value)}
+        onBlur={e=>onChange(value.map((x,idx)=>idx===i?{...x,nombre:e.target.value}:x))}/>
+      <input type="number" style={{fontSize:12,fontWeight:700,width:42,textAlign:"center",border:`1px solid ${P.border}`,borderRadius:6,padding:"3px",color:P.txtTitle}}
+        value={r.cant} onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,cant:Number(e.target.value)}:x))}/>
+      <span style={{fontSize:10,color:P.txtDim,fontWeight:700,width:12}}>{r.tipo==="Aceite"?"L":"un"}</span>
+      <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
+        <input type="checkbox" checked={r.enBodega}
+          onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,enBodega:e.target.checked}:x))}/>
+        <span style={{fontSize:10,fontWeight:700,color:P.txtMuted,textTransform:"uppercase"}}>Bodega</span>
+      </label>
+      <button onClick={()=>onChange(value.filter((_,idx)=>idx!==i))}
+        style={{color:P.red,background:"none",border:"none",cursor:"pointer",fontWeight:700,fontSize:14}}>✕</button>
+    </div>
+  );
+}
 function InsumosTable({title,value=[],onChange}){
   return(
     <div style={{background:"#f8fafc",border:`2px solid ${P.border}`,borderRadius:14,padding:14}}>
@@ -753,25 +760,7 @@ function InsumosTable({title,value=[],onChange}){
       </div>
       {value.length===0&&<p style={{fontSize:12,color:P.txtDim,textAlign:"center",padding:"6px 0",fontStyle:"italic"}}>Sin insumos</p>}
       {value.map((r,i)=>(
-        <div key={i} style={{display:"flex",flexWrap:"wrap",gap:6,alignItems:"center",background:P.card,padding:"7px 10px",borderRadius:9,border:`1px solid ${P.border}`,marginBottom:6}}>
-          <select value={r.tipo} onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,tipo:e.target.value}:x))}
-            style={{fontSize:11,fontWeight:600,border:"none",background:"#f1f5f9",borderRadius:6,padding:"3px 6px",color:P.txtTitle}}>
-            <option>Filtro</option><option>Aceite</option><option>Otro</option>
-          </select>
-          <input style={{fontSize:12,flex:1,padding:"3px 8px",borderRadius:6,border:`1px solid ${P.border}`,outline:"none",color:P.txtTitle,minWidth:70}}
-            placeholder="Descripción..." value={r.nombre}
-            onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,nombre:e.target.value}:x))}/>
-          <input type="number" style={{fontSize:12,fontWeight:700,width:42,textAlign:"center",border:`1px solid ${P.border}`,borderRadius:6,padding:"3px",color:P.txtTitle}}
-            value={r.cant} onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,cant:Number(e.target.value)}:x))}/>
-          <span style={{fontSize:10,color:P.txtDim,fontWeight:700,width:12}}>{r.tipo==="Aceite"?"L":"un"}</span>
-          <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
-            <input type="checkbox" checked={r.enBodega}
-              onChange={e=>onChange(value.map((x,idx)=>idx===i?{...x,enBodega:e.target.checked}:x))}/>
-            <span style={{fontSize:10,fontWeight:700,color:P.txtMuted,textTransform:"uppercase"}}>Bodega</span>
-          </label>
-          <button onClick={()=>onChange(value.filter((_,idx)=>idx!==i))}
-            style={{color:P.red,background:"none",border:"none",cursor:"pointer",fontWeight:700,fontSize:14}}>✕</button>
-        </div>
+        <InsumoRow key={i} r={r} i={i} value={value} onChange={onChange}/>
       ))}
     </div>
   );
@@ -807,7 +796,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
     );
   }
 
-  const renderMant=(label,est,prox,rest,onReg)=>(
+  const renderMant=(label,est,prox,rest,unitR)=>(
     <div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
         <span style={{color:P.txtLight,fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.05em"}}>{label}</span>
@@ -817,29 +806,25 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
         est==="VENCIDA"?(
           <>
             <p style={{fontSize:30,fontWeight:900,color:P.redLight,lineHeight:1,margin:0}}>
-              -{fmt(Math.abs(rest))} <span style={{fontSize:13,color:P.redLight}}>{unit}</span>
+              -{fmt(Math.abs(rest))} <span style={{fontSize:13,color:P.redLight}}>{unitR}</span>
             </p>
             <p style={{fontSize:11,color:P.redLight,fontWeight:700,marginTop:4,textTransform:"uppercase"}}>
-              Debió hacerse a {fmt(prox)} {unit}
+              Debió hacerse a {fmt(prox)} {unitR}
             </p>
           </>
         ):(
           <>
             <p style={{fontSize:30,fontWeight:900,color:"#fff",lineHeight:1,margin:0}}>
-              {fmt(rest)} <span style={{fontSize:13,color:P.txtDim}}>{unit}</span>
+              {fmt(rest)} <span style={{fontSize:13,color:P.txtDim}}>{unitR}</span>
             </p>
             <p style={{fontSize:11,color:P.txtDim,fontWeight:700,marginTop:4,textTransform:"uppercase"}}>
-              Restan · próx. a {fmt(prox)} {unit}
+              Restan · próx. a {fmt(prox)} {unitR}
             </p>
           </>
         )
       ):(
         <p style={{fontSize:12,color:P.txtDim,fontStyle:"italic",marginTop:4}}>Completar datos para calcular</p>
       )}
-      <button onClick={onReg}
-        style={{width:"100%",marginTop:10,background:"#14532d",color:"#fff",padding:"9px",borderRadius:9,fontWeight:700,fontSize:11,textTransform:"uppercase",border:"none",cursor:"pointer"}}>
-        ✓ Registrar {label.includes("Prev")?"Preventiva":"General"}
-      </button>
     </div>
   );
 
@@ -847,11 +832,12 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
     <div style={panel}>
       <Sec c={P.txtLight}>Estado de Ciclo</Sec>
       <div style={{display:"flex",flexDirection:"column",gap:20}}>
-        {!esCamioneta&&renderMant("Próx. Preventiva",s.estPrev,s.proxPrev,s.restPrev,
-          ()=>{if(window.confirm("¿Registrar preventiva realizada?"))upd({ultimaPreventivaHora:s.horaActual});})}
+        {!esCamioneta&&(s.useKmForPrev
+          ? renderMant("Próx. Preventiva",s.estPrev,s.proxPrevKm,s.restPrevKm,"km")
+          : renderMant("Próx. Preventiva",s.estPrev,s.proxPrev,s.restPrev,unit)
+        )}
         <div style={!esCamioneta?{borderTop:"1px solid #334155",paddingTop:20}:{}}>
-          {renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,
-            ()=>{if(window.confirm("¿Registrar general realizada?"))upd({ultimaGeneralHora:s.horaActual});})}
+          {renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,unit)}
         </div>
         {!["CARGADOR","EXCAVADORA","GENERADOR"].includes(e.categoria)&&(
           <div style={{borderTop:"1px solid #334155",paddingTop:18,display:"flex",flexDirection:"column",gap:10}}>
@@ -860,7 +846,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
               <Lbl c={P.txtLight}>Revisión Técnica (últ.)</Lbl>
               <input type="date" value={e.rtUltima||""} onChange={v=>upd({rtUltima:v.target.value})} style={darkInput}/>
               {e.rtUltima&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:5}}>
-                <span style={{fontSize:11,color:P.txtDim}}>Vence {addYears(e.rtUltima,1)}</span>
+                <span style={{fontSize:11,color:P.txtDim}}>Vence {fmtFecha(addYears(e.rtUltima,1))}</span>
                 <Badge e={estadoPorDias(daysBetween(todayISO(),addYears(e.rtUltima,1)),30)}/>
               </div>}
             </div>
@@ -868,7 +854,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
               <Lbl c={P.txtLight}>Permiso Circulación (últ.)</Lbl>
               <input type="date" value={e.pcUltimo||""} onChange={v=>upd({pcUltimo:v.target.value})} style={darkInput}/>
               {e.pcUltimo&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:5}}>
-                <span style={{fontSize:11,color:P.txtDim}}>Vence {addYears(e.pcUltimo,1)}</span>
+                <span style={{fontSize:11,color:P.txtDim}}>Vence {fmtFecha(addYears(e.pcUltimo,1))}</span>
                 <Badge e={estadoPorDias(daysBetween(todayISO(),addYears(e.pcUltimo,1)),30)}/>
               </div>}
             </div>
@@ -887,8 +873,9 @@ const TIPO_COLORS = {
   OTRO:      {bg:"#f1f5f9",fg:"#475569",label:"Otro"},
 };
 
-function HistorialPanel({patente}){
-  const items=HISTORIAL[patente];
+function HistorialPanel({patente,intervenciones=[]}){
+  const legacy=HISTORIAL[patente]||[];
+  const items=[...legacy,...intervenciones];
   if(!items||items.length===0)return null;
   const ordenadas=[...items].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
   return(
@@ -930,6 +917,41 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
   const esCam=e.categoria==="CAMIONETA", esCamion=e.categoria==="CAMION";
   const esBOC=["BATEA","CAMA_BAJA"].includes(e.categoria);
   const lbl=esCam?"Odómetro":"Horómetro", unit=esCam?"km":"h";
+  const [notasLocal,setNotasLocal]=useState(e.notas||"");
+  useEffect(()=>setNotasLocal(e.notas||""),[e.id]);
+
+  const [formShown,setFormShown]=useState(null);
+  const [formData,setFormData]=useState({fecha:todayISO(),hr:"",km:"",detalle:""});
+
+  const guardarForm=()=>{
+    if(!formData.fecha)return;
+    const hr=Number(formData.hr)||0;
+    const km=Number(formData.km)||0;
+    const updates={};
+    if(formShown==="PREVENTIVA"||formShown==="GENERAL"){
+      const entry={fecha:formData.fecha,tipo:formShown,detalle:formData.detalle||"",...(hr&&{hr}),...(km&&{km})};
+      updates.intervenciones=[...(e.intervenciones||[]),entry];
+      if(formShown==="PREVENTIVA"&&hr)updates.ultimaPreventivaHora=hr;
+      if(formShown==="PREVENTIVA"&&km)updates.ultimaPreventivaKm=km;
+      if(formShown==="PREVENTIVA")updates.ultimaPreventivaFecha=formData.fecha;
+      if(formShown==="GENERAL"&&hr)updates.ultimaGeneralHora=hr;
+      if(formShown==="GENERAL")updates.ultimaGeneralFecha=formData.fecha;
+      if(hr&&hr>Number(e.horaActual||0)){updates.horaActual=hr;updates.horaActualFecha=formData.fecha;}
+      if(km&&km>Number(e.odometro||0)){updates.odometro=km;updates.odometroFecha=formData.fecha;}
+    }else if(formShown==="CORRECTIVA"){
+      const entry={fecha:formData.fecha,tipo:"CORRECTIVA",detalle:formData.detalle||"",...(hr&&{hr}),...(km&&{km})};
+      updates.intervenciones=[...(e.intervenciones||[]),entry];
+      if(hr&&hr>Number(e.horaActual||0)){updates.horaActual=hr;updates.horaActualFecha=formData.fecha;}
+      if(km&&km>Number(e.odometro||0)){updates.odometro=km;updates.odometroFecha=formData.fecha;}
+    }else if(formShown==="HR"){
+      if(hr>Number(e.horaActual||0)){updates.horaActual=hr;updates.horaActualFecha=formData.fecha;}
+    }else if(formShown==="KM"){
+      if(km>Number(e.odometro||0)){updates.odometro=km;updates.odometroFecha=formData.fecha;}
+    }
+    if(Object.keys(updates).length)upd(updates);
+    setFormShown(null);
+    setFormData({fecha:todayISO(),hr:"",km:"",detalle:""});
+  };
 
   const handlePatente=(nueva)=>{
     const m=MAESTRO[nueva];
@@ -986,78 +1008,153 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                 <span style={{fontSize:12,color:P.txtTitle,fontWeight:700}}>{e.modelo}</span>
               </div>
             )}
-            {MAESTRO[e.patente]&&(
-              <button onClick={restablecer}
-                style={{background:"#f59e0b",color:"#fff",border:"none",borderRadius:9,padding:"7px 14px",fontWeight:700,fontSize:11,textTransform:"uppercase",cursor:"pointer"}}>
-                ↺ Restablecer datos oficiales
-              </button>
-            )}
           </div>
         </div>
 
-        {/* Lectura Actual */}
+        {/* Lectura Actual — card unificado */}
         {!esBOC&&(
-          <div style={{background:"#1d4ed8",borderRadius:16,padding:22,boxShadow:"0 4px 20px rgba(29,78,216,0.35)"}}>
-            <p style={{fontSize:12,fontWeight:700,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:14,display:"flex",alignItems:"center",gap:8}}>
+          <div style={{background:"#155d2e",borderRadius:16,padding:22,boxShadow:"0 4px 20px rgba(24,128,56,0.35)"}}>
+            <p style={{fontSize:12,fontWeight:700,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
               <span>📍</span> Lectura Actual
             </p>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-              <div><Lbl c="#fff">{lbl} ({unit})</Lbl>
-                <input type="number" style={{width:"100%",padding:"13px 16px",borderRadius:12,background:"#fff",color:"#1e3a8a",fontWeight:900,fontSize:26,border:"none",outline:"none",boxSizing:"border-box"}}
-                  value={e.horaActual||""} onChange={v=>upd({horaActual:Number(v.target.value)})} placeholder="0"/>
+
+            {/* Números grandes */}
+            <div style={{display:"grid",gridTemplateColumns:esCamion?"1fr 1fr":"1fr",gap:14,marginBottom:16}}>
+              <div>
+                <Lbl c="rgba(255,255,255,0.65)">{lbl} ({unit})</Lbl>
+                <p style={{fontSize:46,fontWeight:900,color:"#fff",lineHeight:1,margin:"4px 0 2px",fontFamily:FF}}>
+                  {e.horaActual?fmt(e.horaActual):"—"}
+                </p>
+                <span style={{fontSize:11,color:"rgba(255,255,255,0.55)"}}>{fmtFecha(e.horaActualFecha)||"sin fecha"}</span>
               </div>
-              <div><Lbl c="#fff">Fecha de Lectura</Lbl>
-                <input type="date" style={{width:"100%",padding:"13px 16px",borderRadius:12,background:"#fff",color:"#1e3a8a",fontWeight:600,fontSize:15,border:"none",outline:"none",boxSizing:"border-box"}}
-                  value={e.horaActualFecha||""} onChange={v=>upd({horaActualFecha:v.target.value})}/>
+              {esCamion&&(
+                <div>
+                  <Lbl c="rgba(255,255,255,0.65)">Odómetro (km)</Lbl>
+                  <p style={{fontSize:46,fontWeight:900,color:"#fff",lineHeight:1,margin:"4px 0 2px",fontFamily:FF}}>
+                    {e.odometro?fmt(e.odometro):"—"}
+                  </p>
+                  <span style={{fontSize:11,color:"rgba(255,255,255,0.55)"}}>{fmtFecha(e.odometroFecha)||"sin fecha"}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Últimas intervenciones */}
+            <div style={{borderTop:"1px solid rgba(255,255,255,0.15)",paddingTop:14,marginBottom:16,display:"flex",gap:28,flexWrap:"wrap"}}>
+              {!esCam&&(
+                <div>
+                  <Lbl c="rgba(255,255,255,0.6)">Últ. Preventiva</Lbl>
+                  <span style={{color:"#fff",fontWeight:700,fontSize:15}}>{e.ultimaPreventivaHora?`${fmt(e.ultimaPreventivaHora)} h`:"—"}</span>
+                  <span style={{fontSize:12,color:"rgba(255,255,255,0.85)",display:"block",marginTop:2}}>
+                    {fmtFecha(e.ultimaPreventivaFecha||ultimaFechaHist(e.patente,"PREVENTIVA"))}
+                  </span>
+                </div>
+              )}
+              <div>
+                <Lbl c="rgba(255,255,255,0.6)">Últ. General</Lbl>
+                <span style={{color:"#fff",fontWeight:700,fontSize:15}}>{e.ultimaGeneralHora?`${fmt(e.ultimaGeneralHora)} h`:"—"}</span>
+                <span style={{fontSize:12,color:"rgba(255,255,255,0.85)",display:"block",marginTop:2}}>
+                  {fmtFecha(e.ultimaGeneralFecha||ultimaFechaHist(e.patente,"GENERAL"))}
+                </span>
               </div>
             </div>
+
+            {/* Botones */}
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:formShown?12:0}}>
+              {!esCam&&(
+                <button onClick={()=>setFormShown(formShown==="PREVENTIVA"?null:"PREVENTIVA")}
+                  style={{background:formShown==="PREVENTIVA"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="PREVENTIVA"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                  + M. Preventiva
+                </button>
+              )}
+              <button onClick={()=>setFormShown(formShown==="GENERAL"?null:"GENERAL")}
+                style={{background:formShown==="GENERAL"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="GENERAL"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                + M. General
+              </button>
+              <button onClick={()=>setFormShown(formShown==="CORRECTIVA"?null:"CORRECTIVA")}
+                style={{background:formShown==="CORRECTIVA"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="CORRECTIVA"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                + M. Correctiva
+              </button>
+              {!esCam&&(
+                <button onClick={()=>setFormShown(formShown==="HR"?null:"HR")}
+                  style={{background:formShown==="HR"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="HR"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                  Agregar Hr
+                </button>
+              )}
+              {esCamion&&(
+                <button onClick={()=>setFormShown(formShown==="KM"?null:"KM")}
+                  style={{background:formShown==="KM"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="KM"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                  Agregar Km
+                </button>
+              )}
+            </div>
+
+            {/* Formulario inline */}
+            {formShown&&(
+              <div style={{display:"flex",flexWrap:"wrap",gap:10,alignItems:"flex-end",background:"rgba(0,0,0,0.25)",padding:14,borderRadius:10,marginTop:10}}>
+                <div>
+                  <Lbl c="rgba(255,255,255,0.7)">Fecha</Lbl>
+                  <input type="date" style={{padding:"8px 12px",borderRadius:8,border:"none",background:"#fff",color:"#0f172a",fontWeight:600,fontSize:14,outline:"none"}}
+                    value={formData.fecha} onChange={ev=>setFormData(d=>({...d,fecha:ev.target.value}))}/>
+                </div>
+                {(formShown==="PREVENTIVA"||formShown==="GENERAL"||formShown==="HR"||formShown==="CORRECTIVA")&&(
+                  <div>
+                    <Lbl c="rgba(255,255,255,0.7)">{esCamion&&["PREVENTIVA","GENERAL","CORRECTIVA"].includes(formShown)?"Horómetro (h, opc.)":"Horómetro (h)"}</Lbl>
+                    <input type="number" style={{padding:"8px 12px",borderRadius:8,border:"none",background:"#fff",color:"#0f172a",fontWeight:700,fontSize:14,outline:"none",width:120}}
+                      placeholder="ej: 4103" value={formData.hr} onChange={ev=>setFormData(d=>({...d,hr:ev.target.value}))}/>
+                  </div>
+                )}
+                {(formShown==="KM"||(esCamion&&["PREVENTIVA","GENERAL","CORRECTIVA"].includes(formShown)))&&(
+                  <div>
+                    <Lbl c="rgba(255,255,255,0.7)">{formShown==="KM"?"Odómetro (km)":"Odómetro (km, opc.)"}</Lbl>
+                    <input type="number" style={{padding:"8px 12px",borderRadius:8,border:"none",background:"#fff",color:"#0f172a",fontWeight:700,fontSize:14,outline:"none",width:130}}
+                      placeholder="ej: 80500" value={formData.km} onChange={ev=>setFormData(d=>({...d,km:ev.target.value}))}/>
+                  </div>
+                )}
+                {(formShown==="PREVENTIVA"||formShown==="GENERAL"||formShown==="CORRECTIVA")&&(
+                  <div style={{flex:"1 1 200px"}}>
+                    <Lbl c="rgba(255,255,255,0.7)">Detalle (opcional)</Lbl>
+                    <input style={{padding:"8px 12px",borderRadius:8,border:"none",background:"#fff",color:"#0f172a",fontSize:13,outline:"none",width:"100%",boxSizing:"border-box"}}
+                      placeholder="Ej: Cambio aceite motor 15W-40 38L + filtros"
+                      value={formData.detalle} onChange={ev=>setFormData(d=>({...d,detalle:ev.target.value}))}/>
+                  </div>
+                )}
+                <button onClick={guardarForm}
+                  style={{background:"#fff",color:"#155d2e",border:"none",borderRadius:9,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  Guardar
+                </button>
+                <button onClick={()=>setFormShown(null)}
+                  style={{background:"rgba(255,255,255,0.15)",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  Cancelar
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Odómetro Camiones */}
-        {esCamion&&(
-          <div style={{background:"#1e293b",borderRadius:16,padding:22}}>
-            <p style={{fontSize:12,fontWeight:700,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:14,display:"flex",alignItems:"center",gap:8}}>
-              <span>🛣️</span> Odómetro Complementario (km)
-            </p>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-              <div><Lbl c="#fff">Km Actual</Lbl>
-                <input type="number" style={{width:"100%",padding:"12px 14px",borderRadius:10,background:"#334155",color:"#fff",fontWeight:900,fontSize:22,border:"none",outline:"none",boxSizing:"border-box"}}
-                  placeholder="0" value={e.odometro||""} onChange={v=>upd({odometro:Number(v.target.value)})}/>
-              </div>
-              <div><Lbl c="#fff">Fecha</Lbl>
-                <input type="date" style={{width:"100%",padding:"12px 14px",borderRadius:10,background:"#334155",color:"#fff",fontWeight:500,fontSize:14,border:"none",outline:"none",boxSizing:"border-box"}}
-                  value={e.odometroFecha||""} onChange={v=>upd({odometroFecha:v.target.value})}/>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Plan + Intervenciones */}
+        {/* Plan de Mantenimiento */}
         {!esBOC&&(
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-            <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:18}}>
-              <Sec>Plan de Mantenimiento</Sec>
-              <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                {!esCam&&<div><Lbl>Preventiva cada ({unit})</Lbl>
-                  <Inp type="number" value={e.preventivaCada||""} placeholder="ej: 250" onChange={v=>upd({preventivaCada:Number(v.target.value)})}/></div>}
-                <div><Lbl>General cada ({unit})</Lbl>
-                  <Inp type="number" value={e.generalCada||""} placeholder="ej: 2000" onChange={v=>upd({generalCada:Number(v.target.value)})}/></div>
-                <div><Lbl>{unit} Proyectadas / Día</Lbl>
-                  <Inp type="number" value={e.horasDiariasOverride||""} placeholder="ej: 8" onChange={v=>upd({horasDiariasOverride:Number(v.target.value)})}/></div>
-              </div>
-            </div>
-            <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:18}}>
-              <Sec>Últimas Intervenciones</Sec>
-              <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                {!esCam&&<div><Lbl>Últ. Preventiva ({unit})</Lbl>
-                  <Inp type="number" value={e.ultimaPreventivaHora||""} placeholder="0" onChange={v=>upd({ultimaPreventivaHora:Number(v.target.value)})}/></div>}
-                <div><Lbl>Últ. General ({unit})</Lbl>
-                  <Inp type="number" value={e.ultimaGeneralHora||""} placeholder="0" onChange={v=>upd({ultimaGeneralHora:Number(v.target.value)})}/></div>
-              </div>
+          <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:18}}>
+            <Sec>Plan de Mantenimiento</Sec>
+            <div style={{display:"flex",gap:14,flexWrap:"wrap"}}>
+              {!esCam&&<div style={{flex:1,minWidth:120}}><Lbl>Preventiva cada ({unit})</Lbl>
+                <Inp type="number" value={e.preventivaCada||""} placeholder="ej: 250" onChange={v=>upd({preventivaCada:Number(v.target.value)})}/></div>}
+              {esCamion&&<div style={{flex:1,minWidth:120}}><Lbl>Preventiva cada (km)</Lbl>
+                <Inp type="number" value={e.preventivaCadaKm||""} placeholder="ej: 10000" onChange={v=>upd({preventivaCadaKm:Number(v.target.value)||null})}/></div>}
+              <div style={{flex:1,minWidth:120}}><Lbl>General cada ({unit})</Lbl>
+                <Inp type="number" value={e.generalCada||""} placeholder="ej: 2000" onChange={v=>upd({generalCada:Number(v.target.value)})}/></div>
+              <div style={{flex:1,minWidth:120}}><Lbl>{unit} Proyectadas / Día</Lbl>
+                <Inp type="number" value={e.horasDiariasOverride||""} placeholder="ej: 8" onChange={v=>upd({horasDiariasOverride:Number(v.target.value)})}/></div>
             </div>
           </div>
         )}
+
+        {/* Notas */}
+        <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:18}}>
+          <Lbl>Notas y Observaciones</Lbl>
+          <textarea style={{width:"100%",padding:"10px 13px",borderRadius:10,border:`2px solid ${P.border}`,background:P.card,color:P.txtTitle,fontSize:14,resize:"none",outline:"none",boxSizing:"border-box"}}
+            rows={3} placeholder="Observaciones, próximos trabajos, recordatorios..."
+            value={notasLocal} onChange={v=>setNotasLocal(v.target.value)} onBlur={v=>upd({notas:v.target.value})}/>
+        </div>
 
         {/* Insumos */}
         {!esBOC&&(
@@ -1067,16 +1164,9 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
           </div>
         )}
 
-        {/* Notas */}
-        <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:18}}>
-          <Lbl>Notas y Observaciones</Lbl>
-          <textarea style={{width:"100%",padding:"10px 13px",borderRadius:10,border:`2px solid ${P.border}`,background:P.card,color:P.txtTitle,fontSize:14,resize:"none",outline:"none",boxSizing:"border-box"}}
-            rows={3} placeholder="Observaciones, próximos trabajos, recordatorios..."
-            value={e.notas||""} onChange={v=>upd({notas:v.target.value})}/>
-        </div>
 
         {/* Historial */}
-        <HistorialPanel patente={e.patente}/>
+        <HistorialPanel patente={e.patente} intervenciones={e.intervenciones||[]}/>
       </div>
 
       {/* Panel lateral */}
@@ -1091,20 +1181,28 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
 });
 
 /* ═══════════════════════ RESUMEN ═══════════════════════ */
+const SIN_DATOS=new Set(["⚠️ LECTURA","⚙️ PREV","🛠️ GEN"]);
 function Resumen({equipos,calcularEstado}){
   const st=useMemo(()=>{
-    let v=0,u=0,ok=0;
-    equipos.forEach(e=>{const s=calcularEstado(e).salud;if(s==="VENCIDA")v++;else if(s==="URGENTE")u++;else ok++;});
-    return{total:equipos.length,v,u,ok};
+    let v=0,u=0,ok=0,sd=0;
+    equipos.forEach(e=>{
+      const s=calcularEstado(e).salud;
+      if(s==="VENCIDA")v++;
+      else if(s==="URGENTE")u++;
+      else if(SIN_DATOS.has(s))sd++;
+      else ok++;
+    });
+    return{total:equipos.length,v,u,ok,sd};
   },[equipos,calcularEstado]);
   if(!st.total)return null;
   return(
-    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:24}}>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:12,marginBottom:24}}>
       {[
-        {l:"Total",    n:st.total, bg:"#f1f5f9", fg:P.txtTitle},
-        {l:"Vencidas", n:st.v,     bg:st.v>0?P.red:"#f1f5f9",    fg:st.v>0?"#fff":P.txtMuted},
-        {l:"Urgentes", n:st.u,     bg:st.u>0?P.orange:"#f1f5f9", fg:st.u>0?"#fff":P.txtMuted},
-        {l:"Al día",   n:st.ok,    bg:P.green, fg:"#fff"},
+        {l:"Total",        n:st.total, bg:"#f1f5f9", fg:P.txtTitle},
+        {l:"Vencidas",     n:st.v,     bg:st.v>0?P.red:"#f1f5f9",    fg:st.v>0?"#fff":P.txtMuted},
+        {l:"Urgentes",     n:st.u,     bg:st.u>0?P.orange:"#f1f5f9", fg:st.u>0?"#fff":P.txtMuted},
+        {l:"Al día",       n:st.ok,    bg:P.green, fg:"#fff"},
+        {l:"Sin registro", n:st.sd,    bg:st.sd>0?"#64748b":"#f1f5f9", fg:st.sd>0?"#fff":P.txtMuted},
       ].map(s=>(
         <div key={s.l} style={{background:s.bg,borderRadius:14,padding:"14px 10px",textAlign:"center"}}>
           <div style={{fontSize:30,fontWeight:900,color:s.fg,lineHeight:1}}>{s.n}</div>
@@ -1157,17 +1255,40 @@ export default function App(){
     if(!e.horaActual||Number(e.horaActual)===0)eg="⚠️ LECTURA";
     else if(!ultGen||ultGen===0)eg="🛠️ GEN";
     else{const r=(ultGen+genCada)-ha;if(r<=0)eg="VENCIDA";else if(r<=urgenteLim)eg="URGENTE";else if(r<=prontoLim)eg="PRONTO";}
+    const esCamion=e.categoria==="CAMION";
+    const prevCadaKm=Number(e.preventivaCadaKm||0);
+    const useKmForPrev=esCamion&&prevCadaKm>0;
+    let proxPrevKm=0,restPrevKm=0;
+    if(useKmForPrev){
+      const ultPrevKm=Number(e.ultimaPreventivaKm||0);
+      const kmAct=Number(e.odometro||0);
+      proxPrevKm=ultPrevKm+prevCadaKm;
+      restPrevKm=proxPrevKm-kmAct;
+      if(!kmAct)ep="⚠️ LECTURA";
+      else if(!ultPrevKm)ep="⚙️ PREV";
+      else if(restPrevKm<=0)ep="VENCIDA";
+      else if(restPrevKm<=1000)ep="URGENTE";
+      else if(restPrevKm<=3000)ep="PRONTO";
+      else ep="OK";
+    }
     const pr={VENCIDA:6,URGENTE:5,"⚠️ LECTURA":4,"⚙️ PREV":3,"🛠️ GEN":2,PRONTO:1,OK:0};
-    const worst=esCam?eg:(pr[ep]>=pr[eg]?ep:eg);
+    const realSt=s=>["VENCIDA","URGENTE","PRONTO","OK"].includes(s);
+    let worst;
+    if(esCam) worst=eg;
+    else if(realSt(ep)||realSt(eg)){
+      const real=[ep,eg].filter(realSt);
+      worst=real.reduce((a,b)=>pr[a]>=pr[b]?a:b,"OK");
+    } else worst=pr[ep]>=pr[eg]?ep:eg;
     return{horaActual:ha,
       proxPrev:ultPrev+prevCada,
       proxGen: ultGen+genCada,
       restPrev:(ultPrev+prevCada)-ha,
       restGen: (ultGen+genCada)-ha,
+      proxPrevKm,restPrevKm,useKmForPrev,
       estPrev:ep,estGen:eg,salud:worst};
   },[]);
 
-  const pageStyle={padding:24,maxWidth:1100,margin:"0 auto",minHeight:"100vh",background:P.page};
+  const pageStyle={padding:24,maxWidth:1600,margin:"0 auto",minHeight:"100vh",background:P.page,fontFamily:FFb};
 
   if(loading)return(
     <div style={{minHeight:"100vh",background:P.page,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -1181,10 +1302,35 @@ export default function App(){
   if(!view.cat)return(
     <div style={pageStyle}>
       <header style={{marginBottom:24,paddingBottom:18,borderBottom:`4px solid ${P.dark}`}}>
-        <h1 style={{fontSize:50,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",lineHeight:1,margin:0}}>VIA 5</h1>
+        <h1 style={{fontSize:50,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",lineHeight:1,margin:0,fontFamily:FF}}>VIA 5</h1>
         <p style={{color:P.blue,fontWeight:700,fontSize:12,textTransform:"uppercase",letterSpacing:"0.25em",marginTop:6}}>Gestión de Flota y Mantenciones</p>
       </header>
       <Resumen equipos={equipos} calcularEstado={calcularEstado}/>
+      {(()=>{
+        const hoy=todayISO();
+        const toISO=ts=>{if(!ts)return"";if(typeof ts==="string")return ts;if(ts.toDate)return ts.toDate().toISOString().slice(0,10);return"";};
+        const sorted=[...equipos]
+          .map(e=>({...e,_fecha:toISO(e.updatedAt)||e.horaActualFecha||""}))
+          .sort((a,b)=>b._fecha.localeCompare(a._fecha));
+if(!sorted.length)return null;
+        return(
+          <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:"14px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+            <span style={{fontSize:11,fontWeight:700,color:P.blue,textTransform:"uppercase",letterSpacing:"0.08em",whiteSpace:"nowrap"}}>Últ. actualización</span>
+            {sorted.map(e=>{
+              const esHoy=e._fecha===hoy;
+              const label=esHoy?"Hoy":e._fecha?fmtFecha(e._fecha):"—";
+              return(
+                <div key={e.id} onClick={()=>setView({cat:e.categoria,id:e.id})}
+                  style={{display:"flex",alignItems:"center",gap:6,padding:"5px 10px",borderRadius:20,cursor:"pointer",
+                    background:esHoy?"#dcfce7":"#f1f5f9",border:`1px solid ${esHoy?"#86efac":P.border}`}}>
+                  <span style={{fontWeight:800,fontSize:12,color:P.txtTitle,textTransform:"uppercase",fontFamily:FF}}>{e.patente||e.categoria||"S/P"}</span>
+                  <span style={{fontSize:11,color:esHoy?"#16a34a":P.txtMuted,fontWeight:600}}>{label}</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:18}}>
         {CATEGORIES.map(c=>{
           const us=equipos.filter(e=>e.categoria===c.id);
@@ -1204,7 +1350,7 @@ export default function App(){
                   {us.length} equipo{us.length!==1?"s":""}
                 </span>}
               </div>
-              <h3 style={{fontSize:18,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",margin:0}}>{c.label}</h3>
+              <h3 style={{fontSize:18,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",margin:0,fontFamily:FF}}>{c.label}</h3>
               {us.length===0&&<p style={{fontSize:12,color:P.txtDim,marginTop:4}}>Sin equipos registrados</p>}
             </div>
           );
@@ -1216,13 +1362,13 @@ export default function App(){
   if(view.cat&&!view.id){
     const cat=CATEGORIES.find(c=>c.id===view.cat);
     const ecs=equipos.filter(e=>e.categoria===view.cat);
-    const bc=s=>({VENCIDA:P.red,URGENTE:P.orange,PRONTO:P.yellow,OK:P.green}[s]||P.green);
+    const bc=s=>({VENCIDA:P.red,URGENTE:P.orange,PRONTO:P.yellow,OK:P.green}[s]||"#94a3b8");
     return(
       <div style={pageStyle}>
         <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:24}}>
           <Btn v="secondary" sx={{borderRadius:"50%",width:42,height:42,padding:0,fontSize:18}} onClick={()=>setView({cat:null,id:null})}>←</Btn>
           <div>
-            <h2 style={{fontSize:34,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",lineHeight:1,margin:0}}>{cat.icon} {cat.label}</h2>
+            <h2 style={{fontSize:34,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",lineHeight:1,margin:0,fontFamily:FF}}>{cat.icon} {cat.label}</h2>
             <p style={{fontSize:12,color:P.txtMuted,fontWeight:600,marginTop:4}}>{ecs.length} equipo{ecs.length!==1?"s":""} registrado{ecs.length!==1?"s":""}</p>
           </div>
         </div>
@@ -1234,9 +1380,10 @@ export default function App(){
                 style={{background:P.card,border:`1px solid ${P.border}`,borderLeft:`6px solid ${bc(s.salud)}`,borderRadius:14,padding:18,cursor:"pointer",boxShadow:"0 1px 4px rgba(0,0,0,0.06)",transition:"all 0.15s"}}
                 onMouseOver={e=>{e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,0.12)";}}
                 onMouseOut={e=>{e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.06)";}}>
-                <div style={{fontSize:20,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",lineHeight:1,marginBottom:3}}>{e.patente||"S/P"}</div>
+                <div style={{fontSize:20,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",lineHeight:1,marginBottom:3,fontFamily:FF}}>{e.patente||"S/P"}</div>
                 <div style={{fontSize:11,fontWeight:600,color:P.txtDim,textTransform:"uppercase",marginBottom:4}}>{e.modelo||e.marca||"Sin modelo"}</div>
-                {e.operador&&<div style={{fontSize:12,color:P.txtBody,marginBottom:8}}>👤 {e.operador}</div>}
+                {e.operador&&<div style={{fontSize:12,color:P.txtBody,marginBottom:4}}>👤 {e.operador}</div>}
+                {MAESTRO[e.patente]?.m3&&<div style={{fontSize:12,color:P.txtMuted,marginBottom:4}}>📦 {MAESTRO[e.patente].m3} m³</div>}
                 <div style={{marginBottom:6}}><Badge e={s.salud}/></div>
                 {e.horaActual>0&&<div style={{fontSize:11,color:P.txtMuted}}>{e.categoria==="CAMIONETA"?`${fmt(e.horaActual)} km`:`${fmt(e.horaActual)} h`}</div>}
               </div>
@@ -1263,14 +1410,15 @@ export default function App(){
 
   const eq=equipos.find(x=>x.id===view.id);
   return(
-    <div style={{padding:24,maxWidth:1300,margin:"0 auto",minHeight:"100vh",background:P.page}}>
+    <div style={{padding:24,maxWidth:1600,margin:"0 auto",minHeight:"100vh",background:P.page,fontFamily:FFb}}>
       <div style={{marginBottom:18,display:"flex",justifyContent:"space-between",alignItems:"center",background:P.card,padding:"14px 18px",borderRadius:14,boxShadow:"0 1px 4px rgba(0,0,0,0.07)",border:`1px solid ${P.border}`}}>
         <Btn v="secondary" onClick={()=>setView({...view,id:null})}>← Volver</Btn>
         <div style={{textAlign:"right"}}>
           <p style={{fontSize:11,fontWeight:700,color:P.blue,textTransform:"uppercase",letterSpacing:"0.15em",margin:0}}>Ficha Técnica</p>
-          <h2 style={{fontSize:26,fontWeight:900,color:P.txtTitle,fontStyle:"italic",textTransform:"uppercase",margin:0,lineHeight:1}}>{eq?.patente||"Sin identificar"}</h2>
+          <h2 style={{fontSize:26,fontWeight:900,color:P.txtTitle,fontStyle:"italic",textTransform:"uppercase",margin:0,lineHeight:1,fontFamily:FF}}>{eq?.patente||"Sin identificar"}</h2>
           {eq?.modelo&&<p style={{fontSize:12,color:P.txtMuted,margin:"2px 0 0"}}>{eq.modelo}</p>}
           {eq?.operador&&<p style={{fontSize:12,color:P.txtMuted,margin:"2px 0 0"}}>👤 {eq.operador}</p>}
+          {MAESTRO[eq?.patente]?.m3&&<p style={{fontSize:12,color:P.txtMuted,margin:"2px 0 0"}}>📦 {MAESTRO[eq.patente].m3} m³</p>}
         </div>
       </div>
       {eq?(
