@@ -1266,8 +1266,10 @@ export default function App(){
     else if(!ultGen||ultGen===0)eg="🛠️ GEN";
     else{const r=(ultGen+genCada)-ha;if(r<=0)eg="VENCIDA";else if(r<=urgenteLim)eg="URGENTE";else if(r<=prontoLim)eg="PRONTO";}
     const esCamion=e.categoria==="CAMION";
+    // Gana la lectura más reciente: si el odómetro se actualizó después que el horómetro, se calcula por km; en empate o si el horómetro es más nuevo, predomina el horómetro.
+    const kmMasReciente=esCamion&&!!e.odometroFecha&&(!e.horaActualFecha||e.odometroFecha>e.horaActualFecha);
     const prevCadaKm=Number(e.preventivaCadaKm||0);
-    const useKmForPrev=esCamion&&prevCadaKm>0;
+    const useKmForPrev=esCamion&&prevCadaKm>0&&kmMasReciente;
     let proxPrevKm=0,restPrevKm=0;
     if(useKmForPrev){
       const ultPrevKm=Number(e.ultimaPreventivaKm||0);
@@ -1282,7 +1284,7 @@ export default function App(){
       else ep="OK";
     }
     const genCadaKm=Number(e.generalCadaKm||0);
-    const useKmForGen=esCamion&&genCadaKm>0;
+    const useKmForGen=esCamion&&genCadaKm>0&&kmMasReciente;
     let proxGenKm=0,restGenKm=0;
     if(useKmForGen){
       const ultGenKm=Number(e.ultimaGeneralKm||0);
