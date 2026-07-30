@@ -837,7 +837,10 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
           : renderMant("Próx. Preventiva",s.estPrev,s.proxPrev,s.restPrev,unit)
         )}
         <div style={!esCamioneta?{borderTop:"1px solid #334155",paddingTop:20}:{}}>
-          {renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,unit)}
+          {s.useKmForGen
+            ? renderMant("Próx. General",s.estGen,s.proxGenKm,s.restGenKm,"km")
+            : renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,unit)
+          }
         </div>
         {!["CARGADOR","EXCAVADORA","GENERADOR"].includes(e.categoria)&&(
           <div style={{borderTop:"1px solid #334155",paddingTop:18,display:"flex",flexDirection:"column",gap:10}}>
@@ -935,6 +938,7 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
       if(formShown==="PREVENTIVA"&&km)updates.ultimaPreventivaKm=km;
       if(formShown==="PREVENTIVA")updates.ultimaPreventivaFecha=formData.fecha;
       if(formShown==="GENERAL"&&hr)updates.ultimaGeneralHora=hr;
+      if(formShown==="GENERAL"&&km)updates.ultimaGeneralKm=km;
       if(formShown==="GENERAL")updates.ultimaGeneralFecha=formData.fecha;
       // La general engloba la preventiva: registrarla también marca la preventiva al día
       if(formShown==="GENERAL"&&hr)updates.ultimaPreventivaHora=hr;
@@ -1146,6 +1150,8 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                 <Inp type="number" value={e.preventivaCadaKm||""} placeholder="ej: 10000" onChange={v=>upd({preventivaCadaKm:Number(v.target.value)||null})}/></div>}
               <div style={{flex:1,minWidth:120}}><Lbl>General cada ({unit})</Lbl>
                 <Inp type="number" value={e.generalCada||""} placeholder="ej: 2000" onChange={v=>upd({generalCada:Number(v.target.value)})}/></div>
+              {esCamion&&<div style={{flex:1,minWidth:120}}><Lbl>General cada (km)</Lbl>
+                <Inp type="number" value={e.generalCadaKm||""} placeholder="ej: 40000" onChange={v=>upd({generalCadaKm:Number(v.target.value)||null})}/></div>}
               <div style={{flex:1,minWidth:120}}><Lbl>{unit} Proyectadas / Día</Lbl>
                 <Inp type="number" value={e.horasDiariasOverride||""} placeholder="ej: 8" onChange={v=>upd({horasDiariasOverride:Number(v.target.value)})}/></div>
             </div>
@@ -1275,6 +1281,21 @@ export default function App(){
       else if(restPrevKm<=3000)ep="PRONTO";
       else ep="OK";
     }
+    const genCadaKm=Number(e.generalCadaKm||0);
+    const useKmForGen=esCamion&&genCadaKm>0;
+    let proxGenKm=0,restGenKm=0;
+    if(useKmForGen){
+      const ultGenKm=Number(e.ultimaGeneralKm||0);
+      const kmAct=Number(e.odometro||0);
+      proxGenKm=ultGenKm+genCadaKm;
+      restGenKm=proxGenKm-kmAct;
+      if(!kmAct)eg="⚠️ LECTURA";
+      else if(!ultGenKm)eg="🛠️ GEN";
+      else if(restGenKm<=0)eg="VENCIDA";
+      else if(restGenKm<=1000)eg="URGENTE";
+      else if(restGenKm<=3000)eg="PRONTO";
+      else eg="OK";
+    }
     const pr={VENCIDA:6,URGENTE:5,"⚠️ LECTURA":4,"⚙️ PREV":3,"🛠️ GEN":2,PRONTO:1,OK:0};
     const realSt=s=>["VENCIDA","URGENTE","PRONTO","OK"].includes(s);
     let worst;
@@ -1289,6 +1310,7 @@ export default function App(){
       restPrev:(ultPrev+prevCada)-ha,
       restGen: (ultGen+genCada)-ha,
       proxPrevKm,restPrevKm,useKmForPrev,
+      proxGenKm,restGenKm,useKmForGen,
       estPrev:ep,estGen:eg,salud:worst};
   },[]);
 
