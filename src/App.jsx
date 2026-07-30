@@ -936,6 +936,10 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
       if(formShown==="PREVENTIVA")updates.ultimaPreventivaFecha=formData.fecha;
       if(formShown==="GENERAL"&&hr)updates.ultimaGeneralHora=hr;
       if(formShown==="GENERAL")updates.ultimaGeneralFecha=formData.fecha;
+      // La general engloba la preventiva: registrarla también marca la preventiva al día
+      if(formShown==="GENERAL"&&hr)updates.ultimaPreventivaHora=hr;
+      if(formShown==="GENERAL"&&km)updates.ultimaPreventivaKm=km;
+      if(formShown==="GENERAL")updates.ultimaPreventivaFecha=formData.fecha;
       if(hr&&hr>Number(e.horaActual||0)){updates.horaActual=hr;updates.horaActualFecha=formData.fecha;}
       if(km&&km>Number(e.odometro||0)){updates.odometro=km;updates.odometroFecha=formData.fecha;}
     }else if(formShown==="CORRECTIVA"){
