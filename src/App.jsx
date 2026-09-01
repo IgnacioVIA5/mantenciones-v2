@@ -668,7 +668,7 @@ function platesFor(cat, marca) {
 
 const OPERATORS = [
   "Eligio Miranda","Patricio Obando","Salomón Fernández","Segundo Gómez",
-  "Fernando Gueicha","Francisco Bahamonde","Pedro Espinoza",
+  "Fernando Gueicha","Aliro Ricardi","Pedro Espinoza",
   "Cecilia Sandoval","Ignacio Echeverría"
 ];
 
@@ -1082,12 +1082,10 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                 style={{background:formShown==="CORRECTIVA"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="CORRECTIVA"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
                 + M. Correctiva
               </button>
-              {!esCam&&(
-                <button onClick={()=>setFormShown(formShown==="HR"?null:"HR")}
-                  style={{background:formShown==="HR"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="HR"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
-                  Agregar Hr
-                </button>
-              )}
+              <button onClick={()=>setFormShown(formShown==="HR"?null:"HR")}
+                style={{background:formShown==="HR"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="HR"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
+                {esCam?"Agregar Km":"Agregar Hr"}
+              </button>
               {esCamion&&(
                 <button onClick={()=>setFormShown(formShown==="KM"?null:"KM")}
                   style={{background:formShown==="KM"?"#fff":"rgba(255,255,255,0.18)",color:formShown==="KM"?"#155d2e":"#fff",border:"none",borderRadius:9,padding:"8px 14px",fontWeight:700,fontSize:12,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.04em"}}>
@@ -1106,7 +1104,7 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                 </div>
                 {(formShown==="PREVENTIVA"||formShown==="GENERAL"||formShown==="HR"||formShown==="CORRECTIVA")&&(
                   <div>
-                    <Lbl c="rgba(255,255,255,0.7)">{esCamion&&["PREVENTIVA","GENERAL","CORRECTIVA"].includes(formShown)?"Horómetro (h, opc.)":"Horómetro (h)"}</Lbl>
+                    <Lbl c="rgba(255,255,255,0.7)">{esCam?"Odómetro (km)":esCamion&&["PREVENTIVA","GENERAL","CORRECTIVA"].includes(formShown)?"Horómetro (h, opc.)":"Horómetro (h)"}</Lbl>
                     <input type="number" style={{padding:"8px 12px",borderRadius:8,border:"none",background:"#fff",color:"#0f172a",fontWeight:700,fontSize:14,outline:"none",width:120}}
                       placeholder="ej: 4103" value={formData.hr} onChange={ev=>setFormData(d=>({...d,hr:ev.target.value}))}/>
                   </div>
