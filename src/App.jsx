@@ -1124,6 +1124,11 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
                       value={formData.detalle} onChange={ev=>setFormData(d=>({...d,detalle:ev.target.value}))}/>
                   </div>
                 )}
+                {(formShown==="PREVENTIVA"||formShown==="GENERAL")&&!formData.hr&&(
+                  <div style={{flex:"1 1 100%",display:"flex",alignItems:"center",gap:6,color:"#fde68a",fontSize:12,fontWeight:600}}>
+                    ⚠️ Sin horómetro: el cálculo de próxima {formShown==="PREVENTIVA"?"preventiva":"general"} quedará desactualizado hasta que se registre una lectura de Hr.
+                  </div>
+                )}
                 <button onClick={guardarForm}
                   style={{background:"#fff",color:"#155d2e",border:"none",borderRadius:9,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
                   Guardar
