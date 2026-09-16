@@ -796,7 +796,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
     );
   }
 
-  const renderMant=(label,est,prox,rest,unitR)=>(
+  const renderMant=(label,est,prox,rest,unitR,restSec,unitSec)=>(
     <div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
         <span style={{color:P.txtLight,fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.05em"}}>{label}</span>
@@ -825,6 +825,11 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
       ):(
         <p style={{fontSize:12,color:P.txtDim,fontStyle:"italic",marginTop:4}}>Completar datos para calcular</p>
       )}
+      {restSec!=null&&(
+        <p style={{fontSize:11,color:P.txtDim,marginTop:3}}>
+          o {restSec<0?`vencida hace ${fmt(Math.abs(restSec))} ${unitSec}`:`${fmt(restSec)} ${unitSec}`}
+        </p>
+      )}
     </div>
   );
 
@@ -833,8 +838,8 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
       <Sec c={P.txtLight}>Estado de Ciclo</Sec>
       <div style={{display:"flex",flexDirection:"column",gap:20}}>
         {!esCamioneta&&(s.useKmForPrev
-          ? renderMant("Próx. Preventiva",s.estPrev,s.proxPrevKm,s.restPrevKm,"km")
-          : renderMant("Próx. Preventiva",s.estPrev,s.proxPrev,s.restPrev,unit)
+          ? renderMant("Próx. Preventiva",s.estPrev,s.proxPrevKm,s.restPrevKm,"km",Number(e.ultimaPreventivaHora)>0?s.restPrev:null,unit)
+          : renderMant("Próx. Preventiva",s.estPrev,s.proxPrev,s.restPrev,unit,Number(e.preventivaCadaKm)>0?s.restPrevKm:null,"km")
         )}
         <div style={!esCamioneta?{borderTop:"1px solid #334155",paddingTop:20}:{}}>
           {s.useKmForGen
@@ -1279,10 +1284,13 @@ export default function App(){
     const prevCadaKm=Number(e.preventivaCadaKm||0);
     const useKmForPrev=esCamion&&prevCadaKm>0&&kmMasReciente;
     let proxPrevKm=0,restPrevKm=0;
-    if(useKmForPrev){
+    if(esCamion&&prevCadaKm>0){
       const ultPrevKm=Number(e.ultimaPreventivaKm||0);
       proxPrevKm=ultPrevKm+prevCadaKm;
       restPrevKm=proxPrevKm-kmAct;
+    }
+    if(useKmForPrev){
+      const ultPrevKm=Number(e.ultimaPreventivaKm||0);
       if(!Number(e.odometro||0))ep="⚠️ LECTURA";
       else if(!ultPrevKm)ep="⚙️ PREV";
       else if(restPrevKm<=0)ep="VENCIDA";
