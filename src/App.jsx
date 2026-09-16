@@ -843,8 +843,8 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
         )}
         <div style={!esCamioneta?{borderTop:"1px solid #334155",paddingTop:20}:{}}>
           {s.useKmForGen
-            ? renderMant("Próx. General",s.estGen,s.proxGenKm,s.restGenKm,"km")
-            : renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,unit)
+            ? renderMant("Próx. General",s.estGen,s.proxGenKm,s.restGenKm,"km",Number(e.ultimaGeneralHora)>0?s.restGen:null,unit)
+            : renderMant("Próx. General",s.estGen,s.proxGen,s.restGen,unit,Number(e.generalCadaKm)>0?s.restGenKm:null,"km")
           }
         </div>
         {!["CARGADOR","EXCAVADORA","GENERADOR"].includes(e.categoria)&&(
@@ -1301,10 +1301,13 @@ export default function App(){
     const genCadaKm=Number(e.generalCadaKm||0);
     const useKmForGen=esCamion&&genCadaKm>0&&kmMasReciente;
     let proxGenKm=0,restGenKm=0;
-    if(useKmForGen){
+    if(esCamion&&genCadaKm>0){
       const ultGenKm=Number(e.ultimaGeneralKm||0);
       proxGenKm=ultGenKm+genCadaKm;
       restGenKm=proxGenKm-kmAct;
+    }
+    if(useKmForGen){
+      const ultGenKm=Number(e.ultimaGeneralKm||0);
       if(!Number(e.odometro||0))eg="⚠️ LECTURA";
       else if(!ultGenKm)eg="🛠️ GEN";
       else if(restGenKm<=0)eg="VENCIDA";
