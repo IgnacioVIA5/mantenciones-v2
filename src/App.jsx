@@ -818,7 +818,7 @@ function StatusPanel({s,e,unit,esCamioneta,upd}){
               {fmt(rest)} <span style={{fontSize:13,color:P.txtDim}}>{unitR}</span>
             </p>
             <p style={{fontSize:11,color:P.txtDim,fontWeight:700,marginTop:4,textTransform:"uppercase"}}>
-              Restan · próx. a {fmt(prox)} {unitR}
+              Vence a los {fmt(prox)} {unitR}
             </p>
           </>
         )
