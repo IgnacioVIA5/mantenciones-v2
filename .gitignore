@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Informe semanal — generado, no versionado
+reportes/.venv
+reportes/equipos.json
+reportes/reporte_data.json
+reportes/informe_mantenciones.html
+reportes/informe_mantenciones.pdf
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
