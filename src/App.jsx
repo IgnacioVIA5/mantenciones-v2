@@ -80,7 +80,7 @@ const MAESTRO = {
     insumosGen:[],
   },
   "WY-8717": {
-    modelo:"Mack", m3:21, preventivaCada:300, generalCada:2000,
+    modelo:"Mack (Tractocamión)", preventivaCada:300, generalCada:2000,
     horaActual:0, horaActualFecha:"", ultimaPreventivaHora:0, ultimaGeneralHora:0,
     insumosPrev:[
       {tipo:"Aceite", nombre:"Motor 15W-40",              cant:38, enBodega:false},
