@@ -428,7 +428,7 @@ const HISTORIAL = {
     {fecha:"2026-03-05", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico tolva ISO 68, 65L"},
     {fecha:"2026-03-09", tipo:"CORRECTIVA", detalle:"Cambio hoja resorte paquete delantero. Hr: 7.491"},
     {fecha:"2026-03-24", tipo:"OTRO",       detalle:"Km: 80.321 / Hr: 7.589"},
-    {fecha:"2026-04-02", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 8.091"},
+    {fecha:"2026-04-02", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros."},
   ],
   "RHGC-83": [
     {fecha:"2023-03-17", tipo:"OTRO",       detalle:"Engrase completo. Hr: 2.999"},
