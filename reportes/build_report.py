@@ -16,7 +16,7 @@ def fecha_larga_es(d):
 
 HOY = date.today()
 FECHA_INFORME_TXT = fecha_larga_es(HOY)
-FECHA_INFORME_ARCHIVO = HOY.isoformat()
+FECHA_INFORME_ARCHIVO = HOY.strftime("%d-%m-%Y")
 
 with open(DIR / "reporte_data.json", encoding="utf-8") as f:
     equipos = json.load(f)
