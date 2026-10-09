@@ -18,6 +18,7 @@ reportes/equipos.json
 reportes/reporte_data.json
 reportes/informe_mantenciones.html
 reportes/informe_mantenciones.pdf
+reportes/lecturas_pendientes.json
 
 # Editor directories and files
 .vscode/*
