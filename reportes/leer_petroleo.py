@@ -21,8 +21,16 @@ HOJAS = ["ESTANQUE 1- CASA", "ESTANQUE 2 - PLANTA"]
 COL_FECHA, COL_MAQUINARIA, COL_PATENTE, COL_HOROMETRO, COL_ODOMETRO = 1, 4, 5, 8, 9
 
 # Multiplo maximo de crecimiento aceptado sin revision manual (filtra
-# errores de columna, ej. odometro tipeado en la celda de horometro).
+# errores de columna, ej. odometro tipeado en la celda de horometro) cuando
+# no hay fecha previa confiable para calcular una tasa diaria.
 FACTOR_SOSPECHA = 5
+
+# Tasa diaria maxima aceptada sin revision manual, calculada entre la fecha
+# ya guardada en Firestore y la fecha de la lectura nueva del excel. Son
+# topes generosos (muy por sobre el uso real observado) pensados solo para
+# cazar errores de tipeo/columna, no para validar uso normal de la flota.
+UMBRAL_HR_DIA = 20   # horometro: ~20h/dia ya es doble turno sostenido
+UMBRAL_KM_DIA = 500  # odometro: tramos locales de arido, no carretera larga
 
 
 def norm(p):
@@ -69,8 +77,8 @@ def plan_para_equipo(e, filas):
 
     if categoria == "CAMION":
         objetivos = [
-            ("horometro", "horaActual", "horaActualFecha", e.get("horaActual"), e.get("horaActualFecha")),
-            ("odometro", "odometro", "odometroFecha", e.get("odometro"), e.get("odometroFecha")),
+            ("horometro", "horaActual", "horaActualFecha", "hr", e.get("horaActual"), e.get("horaActualFecha")),
+            ("odometro", "odometro", "odometroFecha", "km", e.get("odometro"), e.get("odometroFecha")),
         ]
     elif categoria == "CAMIONETA":
         # La camioneta solo registra un valor (km) en horaActual; en el excel
@@ -82,40 +90,58 @@ def plan_para_equipo(e, filas):
         candidatas.sort(key=lambda f: f["fecha"])
         ultima = candidatas[-1]
         valor = ultima["odometro"] if ultima["odometro"] is not None else ultima["horometro"]
-        objetivos = [(None, "horaActual", "horaActualFecha", e.get("horaActual"), e.get("horaActualFecha"))]
-        items.append(_evaluar(patente, categoria, "horaActual (km)", "horaActual", "horaActualFecha",
+        items.append(_evaluar(patente, categoria, "horaActual (km)", "horaActual", "horaActualFecha", "km",
                                e.get("horaActual"), e.get("horaActualFecha"), valor, ultima["fecha"]))
         return items
     elif categoria in ("CARGADOR", "EXCAVADORA", "GENERADOR"):
         objetivos = [
-            ("horometro", "horaActual", "horaActualFecha", e.get("horaActual"), e.get("horaActualFecha")),
+            ("horometro", "horaActual", "horaActualFecha", "hr", e.get("horaActual"), e.get("horaActualFecha")),
         ]
     else:
         return items
 
-    for campo_excel, campo_fs, campo_fecha_fs, actual, actual_fecha in objetivos:
+    for campo_excel, campo_fs, campo_fecha_fs, unidad, actual, actual_fecha in objetivos:
         nuevo = ultimo_valor(filas, pn, campo_excel)
         if nuevo is None:
             continue
-        label = "horaActual (hr)" if campo_fs == "horaActual" else "odometro (km)"
-        items.append(_evaluar(patente, categoria, label, campo_fs, campo_fecha_fs,
+        label = f"horaActual ({unidad})" if campo_fs == "horaActual" else f"odometro ({unidad})"
+        items.append(_evaluar(patente, categoria, label, campo_fs, campo_fecha_fs, unidad,
                                actual, actual_fecha, nuevo["valor"], nuevo["fecha"]))
     return items
 
 
-def _evaluar(patente, categoria, label, campo_fs, campo_fecha_fs, actual, actual_fecha, valor_nuevo, fecha_nueva):
+def _evaluar(patente, categoria, label, campo_fs, campo_fecha_fs, unidad, actual, actual_fecha, valor_nuevo, fecha_nueva):
     actual_num = actual if isinstance(actual, (int, float)) else 0
     valor_nuevo = round(float(valor_nuevo))
+    delta = valor_nuevo - actual_num
 
-    if actual_num > 0 and valor_nuevo > actual_num * FACTOR_SOSPECHA:
-        accion = "revisar"
-        motivo = f"salto sospechoso: {valor_nuevo} es >{FACTOR_SOSPECHA}x el valor actual ({actual_num}); posible error de columna en el excel"
-    elif valor_nuevo > actual_num:
-        accion = "actualizar"
-        motivo = ""
-    else:
+    accion, motivo = None, ""
+
+    if delta <= 0:
         accion = "sin_cambios"
         motivo = "el excel no trae una lectura mas nueva que la ya registrada"
+    elif actual_fecha:
+        dias = (datetime.date.fromisoformat(fecha_nueva) - datetime.date.fromisoformat(actual_fecha)).days
+        if dias <= 0:
+            accion = "revisar"
+            motivo = (f"la lectura nueva ({fecha_nueva}) no es posterior a la fecha ya registrada "
+                      f"({actual_fecha}) aunque el valor sea mayor; fechas inconsistentes")
+        else:
+            tasa = delta / dias
+            umbral = UMBRAL_HR_DIA if unidad == "hr" else UMBRAL_KM_DIA
+            if tasa > umbral:
+                accion = "revisar"
+                motivo = (f"tasa implausible: +{delta} {unidad} en {dias} dia(s) ({tasa:.0f} {unidad}/dia, "
+                          f"tope {umbral} {unidad}/dia); posible error de tipeo o de columna en el excel")
+            else:
+                accion = "actualizar"
+    else:
+        # Sin fecha previa confiable para calcular tasa: solo se valida magnitud.
+        if actual_num > 0 and valor_nuevo > actual_num * FACTOR_SOSPECHA:
+            accion = "revisar"
+            motivo = f"salto sospechoso: {valor_nuevo} es >{FACTOR_SOSPECHA}x el valor actual ({actual_num}); posible error de columna en el excel"
+        else:
+            accion = "actualizar"
 
     return {
         "patente": patente,
