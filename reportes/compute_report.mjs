@@ -470,7 +470,7 @@ const HISTORIAL = {
     {fecha:"2026-01-19", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 34L + filtros. Hr: 7.137 / Km: 80.571"},
     {fecha:"2026-02-19", tipo:"CORRECTIVA", detalle:"Cambio 2 neumáticos delanteros. Hr: 7.450 / Km: 85.800"},
     {fecha:"2026-02-24", tipo:"CORRECTIVA", detalle:"Cambio 2 hojas de resorte y revisión total por ruidos de frenado"},
-    {fecha:"2026-02-25", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico levante tolva ISO 68, 60L. Hr: 7.467 / Km: 86.008"},
+    {fecha:"2026-03-25", tipo:"GENERAL",    detalle:"Cambio aceite hidráulico levante tolva ISO 68, 60L. Hr: 7.467 / Km: 86.008"},
     {fecha:"2026-03-21", tipo:"PREVENTIVA", detalle:"Cambio aceite motor 15W-40 35L + filtros. Hr: 7.457 / Km: 85.855"},
     {fecha:"2026-03-30", tipo:"CORRECTIVA", detalle:"Cambio hoja resorte delantera izquierda, perno centro y abrazaderas. Hr: 7.482 / Km: 86.214"},
   ],
