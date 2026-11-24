@@ -1204,23 +1204,26 @@ const RowEditor=memo(function RowEditor({e,calcularEstado,updateEquipo,removeEqu
 const SIN_DATOS=new Set(["⚠️ LECTURA","⚙️ PREV","🛠️ GEN"]);
 function Resumen({equipos,calcularEstado}){
   const st=useMemo(()=>{
-    let v=0,u=0,ok=0,sd=0;
+    let v=0,u=0,pr=0,ok=0,sd=0;
     equipos.forEach(e=>{
       const s=calcularEstado(e).salud;
       if(s==="VENCIDA")v++;
       else if(s==="URGENTE")u++;
+      else if(s==="PRONTO")pr++;
       else if(SIN_DATOS.has(s))sd++;
       else ok++;
     });
-    return{total:equipos.length,v,u,ok,sd};
+    return{total:equipos.length,v,u,pr,ok,sd};
   },[equipos,calcularEstado]);
   if(!st.total)return null;
   return(
-    <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:12,marginBottom:24}}>
+    <div style={{marginBottom:24}}>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(96px,1fr))",gap:12}}>
       {[
         {l:"Total",        n:st.total, bg:"#f1f5f9", fg:P.txtTitle},
         {l:"Vencidas",     n:st.v,     bg:st.v>0?P.red:"#f1f5f9",    fg:st.v>0?"#fff":P.txtMuted},
         {l:"Urgentes",     n:st.u,     bg:st.u>0?P.orange:"#f1f5f9", fg:st.u>0?"#fff":P.txtMuted},
+        {l:"Pronto",       n:st.pr,    bg:st.pr>0?P.yellow:"#f1f5f9", fg:st.pr>0?P.dark:P.txtMuted},
         {l:"Al día",       n:st.ok,    bg:P.green, fg:"#fff"},
         {l:"Sin registro", n:st.sd,    bg:st.sd>0?"#64748b":"#f1f5f9", fg:st.sd>0?"#fff":P.txtMuted},
       ].map(s=>(
@@ -1229,6 +1232,18 @@ function Resumen({equipos,calcularEstado}){
           <div style={{fontSize:11,fontWeight:700,color:s.fg,textTransform:"uppercase",letterSpacing:"0.05em",marginTop:3,opacity:0.85}}>{s.l}</div>
         </div>
       ))}
+    </div>
+    <div style={{marginTop:10,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:"4px 16px",fontSize:12,color:P.txtMuted,lineHeight:1.35}}>
+      {[
+        {c:P.red,    t:"Vencida",      d:"se pasó del límite de horas o km."},
+        {c:P.orange, t:"Urgente",      d:"faltan ≤40 h o ≤1.000 km (camionetas ≤500 km). Hacerla esta semana."},
+        {c:P.yellow, t:"Pronto",       d:"faltan ≤120 h o ≤3.000 km (camionetas ≤1.000 km). Comprar insumos y programar."},
+        {c:P.green,  t:"Al día",       d:"no hay que hacer nada."},
+        {c:"#64748b",t:"Sin registro", d:"falta lectura o la última mantención registrada."},
+      ].map(x=>(
+        <div key={x.t}><span style={{display:"inline-block",width:9,height:9,borderRadius:2,background:x.c,marginRight:6}}/><b style={{color:P.txtBody}}>{x.t}:</b> {x.d}</div>
+      ))}
+    </div>
     </div>
   );
 }
