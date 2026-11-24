@@ -683,37 +683,42 @@ function calcularEstado(e) {
   if (!e.horaActual || Number(e.horaActual) === 0) eg = "⚠️ LECTURA";
   else if (!ultGen || ultGen === 0) eg = "🛠️ GEN";
   else { const r = (ultGen + genCada) - ha; if (r <= 0) eg = "VENCIDA"; else if (r <= urgenteLim) eg = "URGENTE"; else if (r <= prontoLim) eg = "PRONTO"; }
-  const esCamion = e.categoria === "CAMION";
-  const kmMasReciente = esCamion && !!e.odometroFecha && (!e.horaActualFecha || e.odometroFecha > e.horaActualFecha);
-  const elapsedKm = e.odometroFecha ? Math.max(0, daysBetween(e.odometroFecha, todayISO()) * Number(e.kmDiariosOverride || 0)) : 0;
-  const kmAct = Number(e.odometro || 0) + elapsedKm;
-  const prevCadaKm = Number(e.preventivaCadaKm || 0);
-  const useKmForPrev = esCamion && prevCadaKm > 0 && kmMasReciente;
-  let proxPrevKm = 0, restPrevKm = 0;
-  if (useKmForPrev) {
-    const ultPrevKm = Number(e.ultimaPreventivaKm || 0);
-    proxPrevKm = ultPrevKm + prevCadaKm;
-    restPrevKm = proxPrevKm - kmAct;
-    if (!Number(e.odometro || 0)) ep = "⚠️ LECTURA";
-    else if (!ultPrevKm) ep = "⚙️ PREV";
-    else if (restPrevKm <= 0) ep = "VENCIDA";
-    else if (restPrevKm <= 1000) ep = "URGENTE";
-    else if (restPrevKm <= 3000) ep = "PRONTO";
-    else ep = "OK";
+  const esCamion=e.categoria==="CAMION";
+  // Regla camiones (nov-2026):
+  // - Preventiva (aceite motor y filtros): se desgasta por horas de motor, incluido ralentí. Vence por lo que llegue primero (Hr o km),
+  //   pero el Hr solo se usa si es confiable: lectura de horómetro de los últimos 30 días y última preventiva registrada con Hr.
+  //   Si el Hr no es confiable (ej. Mack sin horómetro), se calcula solo por km.
+  // - General (caja, diferenciales, coronas): solo trabaja cuando el camión rueda, se calcula por km si el camión tiene ciclo en km.
+  const prK={VENCIDA:6,URGENTE:5,"⚠️ LECTURA":4,"⚙️ PREV":3,"🛠️ GEN":2,PRONTO:1,OK:0};
+  const hrReciente=!!e.horaActualFecha&&daysBetween(e.horaActualFecha,todayISO())<=30;
+  const ivPrev=(e.intervenciones||[]).find(x=>x.fecha===e.ultimaPreventivaFecha&&(x.tipo==="PREVENTIVA"||x.tipo==="GENERAL"));
+  const hrPrevValida=hrReciente&&ultPrev>0&&!(ivPrev&&!Number(ivPrev.hr));
+  // Entre lecturas reales de odómetro, se proyecta el avance con un ritmo estándar (km/día) configurado por camión.
+  const elapsedKm=e.odometroFecha?Math.max(0,daysBetween(e.odometroFecha,todayISO())*Number(e.kmDiariosOverride||0)):0;
+  const kmAct=Number(e.odometro||0)+elapsedKm;
+  const estKm=(ult,rest,sinBase)=>!Number(e.odometro||0)?"⚠️ LECTURA":!ult?sinBase:rest<=0?"VENCIDA":rest<=1000?"URGENTE":rest<=3000?"PRONTO":"OK";
+  const prevCadaKm=Number(e.preventivaCadaKm||0);
+  const ultPrevKm=Number(e.ultimaPreventivaKm||0);
+  let proxPrevKm=0,restPrevKm=0,useKmForPrev=false;
+  if(esCamion&&prevCadaKm>0){
+    proxPrevKm=ultPrevKm+prevCadaKm;
+    restPrevKm=proxPrevKm-kmAct;
+    const ek=estKm(ultPrevKm,restPrevKm,"⚙️ PREV");
+    const kmValido=Number(e.odometro||0)>0&&ultPrevKm>0;
+    if(kmValido&&hrPrevValida){
+      const restHr=(ultPrev+prevCada)-ha;
+      useKmForPrev=prK[ek]>prK[ep]||(prK[ek]===prK[ep]&&restPrevKm/prevCadaKm<restHr/prevCada);
+    } else useKmForPrev=!hrPrevValida;
+    if(useKmForPrev)ep=ek;
   }
-  const genCadaKm = Number(e.generalCadaKm || 0);
-  const useKmForGen = esCamion && genCadaKm > 0 && kmMasReciente;
-  let proxGenKm = 0, restGenKm = 0;
-  if (useKmForGen) {
-    const ultGenKm = Number(e.ultimaGeneralKm || 0);
-    proxGenKm = ultGenKm + genCadaKm;
-    restGenKm = proxGenKm - kmAct;
-    if (!Number(e.odometro || 0)) eg = "⚠️ LECTURA";
-    else if (!ultGenKm) eg = "🛠️ GEN";
-    else if (restGenKm <= 0) eg = "VENCIDA";
-    else if (restGenKm <= 1000) eg = "URGENTE";
-    else if (restGenKm <= 3000) eg = "PRONTO";
-    else eg = "OK";
+  const genCadaKm=Number(e.generalCadaKm||0);
+  const ultGenKm=Number(e.ultimaGeneralKm||0);
+  const useKmForGen=esCamion&&genCadaKm>0;
+  let proxGenKm=0,restGenKm=0;
+  if(useKmForGen){
+    proxGenKm=ultGenKm+genCadaKm;
+    restGenKm=proxGenKm-kmAct;
+    eg=estKm(ultGenKm,restGenKm,"🛠️ GEN");
   }
   const pr = { VENCIDA: 6, URGENTE: 5, "⚠️ LECTURA": 4, "⚙️ PREV": 3, "🛠️ GEN": 2, PRONTO: 1, OK: 0 };
   const realSt = s => ["VENCIDA", "URGENTE", "PRONTO", "OK"].includes(s);
@@ -727,7 +732,7 @@ function calcularEstado(e) {
     horaActual: ha,
     restPrev: (ultPrev + prevCada) - ha,
     restGen: (ultGen + genCada) - ha,
-    restPrevKm, restGenKm, useKmForPrev, useKmForGen,
+    restPrevKm, restGenKm, useKmForPrev, useKmForGen, hrReciente, hrPrevValida,
     estPrev: ep, estGen: eg, salud: worst,
   };
 }
