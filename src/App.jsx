@@ -1216,34 +1216,26 @@ function Resumen({equipos,calcularEstado}){
     return{total:equipos.length,v,u,pr,ok,sd};
   },[equipos,calcularEstado]);
   if(!st.total)return null;
+  const items=[
+    {l:"Total",        n:st.total, c:P.txtTitle, d:"Equipos registrados en la flota."},
+    {l:"Vencidas",     n:st.v,     c:P.red,      d:"Se pasó del límite de horas o km."},
+    {l:"Urgentes",     n:st.u,     c:P.orange,   d:"Faltan ≤40 h o ≤1.000 km. Hacer esta semana.", t:"Camionetas: ≤500 km"},
+    {l:"Pronto",       n:st.pr,    c:"#ca8a04",  d:"Faltan ≤120 h o ≤3.000 km. Comprar insumos y programar.", t:"Camionetas: ≤1.000 km"},
+    {l:"Al día",       n:st.ok,    c:P.green,    d:"Sin acciones pendientes."},
+    {l:"Sin registro", n:st.sd,    c:"#64748b",  d:"Falta lectura o la última mantención."},
+  ];
   return(
-    <div style={{marginBottom:24}}>
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(96px,1fr))",gap:12}}>
-      {[
-        {l:"Total",        n:st.total, bg:"#f1f5f9", fg:P.txtTitle},
-        {l:"Vencidas",     n:st.v,     bg:st.v>0?P.red:"#f1f5f9",    fg:st.v>0?"#fff":P.txtMuted},
-        {l:"Urgentes",     n:st.u,     bg:st.u>0?P.orange:"#f1f5f9", fg:st.u>0?"#fff":P.txtMuted},
-        {l:"Pronto",       n:st.pr,    bg:st.pr>0?P.yellow:"#f1f5f9", fg:st.pr>0?P.dark:P.txtMuted},
-        {l:"Al día",       n:st.ok,    bg:P.green, fg:"#fff"},
-        {l:"Sin registro", n:st.sd,    bg:st.sd>0?"#64748b":"#f1f5f9", fg:st.sd>0?"#fff":P.txtMuted},
-      ].map(s=>(
-        <div key={s.l} style={{background:s.bg,borderRadius:14,padding:"14px 10px",textAlign:"center"}}>
-          <div style={{fontSize:30,fontWeight:900,color:s.fg,lineHeight:1}}>{s.n}</div>
-          <div style={{fontSize:11,fontWeight:700,color:s.fg,textTransform:"uppercase",letterSpacing:"0.05em",marginTop:3,opacity:0.85}}>{s.l}</div>
-        </div>
-      ))}
-    </div>
-    <div style={{marginTop:10,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:"4px 16px",fontSize:12,color:P.txtMuted,lineHeight:1.35}}>
-      {[
-        {c:P.red,    t:"Vencida",      d:"se pasó del límite de horas o km."},
-        {c:P.orange, t:"Urgente",      d:"faltan ≤40 h o ≤1.000 km (camionetas ≤500 km). Hacerla esta semana."},
-        {c:P.yellow, t:"Pronto",       d:"faltan ≤120 h o ≤3.000 km (camionetas ≤1.000 km). Comprar insumos y programar."},
-        {c:P.green,  t:"Al día",       d:"no hay que hacer nada."},
-        {c:"#64748b",t:"Sin registro", d:"falta lectura o la última mantención registrada."},
-      ].map(x=>(
-        <div key={x.t}><span style={{display:"inline-block",width:9,height:9,borderRadius:2,background:x.c,marginRight:6}}/><b style={{color:P.txtBody}}>{x.t}:</b> {x.d}</div>
-      ))}
-    </div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:12,marginBottom:24}}>
+      {items.map(x=>{
+        const activo=x.n>0||x.l==="Total";
+        return(
+          <div key={x.l} title={x.t||""} style={{background:P.card,border:`1px solid ${P.border}`,borderTop:`4px solid ${activo?x.c:P.border}`,borderRadius:12,padding:"14px 14px 12px",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}>
+            <div style={{fontSize:34,fontWeight:900,lineHeight:1,color:activo?x.c:P.txtDim,fontFamily:FF}}>{x.n}</div>
+            <div style={{fontSize:12,fontWeight:800,color:P.txtTitle,textTransform:"uppercase",letterSpacing:"0.06em",marginTop:6}}>{x.l}</div>
+            <div style={{fontSize:11.5,color:P.txtMuted,lineHeight:1.35,marginTop:6}}>{x.d}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -1358,36 +1350,11 @@ export default function App(){
 
   if(!view.cat)return(
     <div style={pageStyle}>
-      <header style={{marginBottom:24,paddingBottom:18,borderBottom:`4px solid ${P.dark}`}}>
-        <h1 style={{fontSize:50,fontWeight:900,color:P.txtTitle,textTransform:"uppercase",fontStyle:"italic",lineHeight:1,margin:0,fontFamily:FF}}>VIA 5</h1>
-        <p style={{color:P.blue,fontWeight:700,fontSize:12,textTransform:"uppercase",letterSpacing:"0.25em",marginTop:6}}>Gestión de Flota y Mantenciones</p>
+      <header style={{marginBottom:24,paddingBottom:18,borderBottom:`3px solid ${P.dark}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,flexWrap:"wrap"}}>
+        <img src={`${import.meta.env.BASE_URL}VIA5-logo.png`} alt="Áridos VIA 5" style={{height:56,width:"auto",display:"block"}}/>
+        <p style={{color:P.txtMuted,fontWeight:700,fontSize:13,textTransform:"uppercase",letterSpacing:"0.18em",margin:0}}>Gestión de Flota y Mantenciones</p>
       </header>
       <Resumen equipos={equipos} calcularEstado={calcularEstado}/>
-      {(()=>{
-        const hoy=todayISO();
-        const toISO=ts=>{if(!ts)return"";if(typeof ts==="string")return ts;if(ts.toDate)return ts.toDate().toISOString().slice(0,10);return"";};
-        const sorted=[...equipos]
-          .map(e=>({...e,_fecha:toISO(e.updatedAt)||e.horaActualFecha||""}))
-          .sort((a,b)=>b._fecha.localeCompare(a._fecha));
-if(!sorted.length)return null;
-        return(
-          <div style={{background:P.card,border:`1px solid ${P.border}`,borderRadius:14,padding:"14px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-            <span style={{fontSize:11,fontWeight:700,color:P.blue,textTransform:"uppercase",letterSpacing:"0.08em",whiteSpace:"nowrap"}}>Últ. actualización</span>
-            {sorted.map(e=>{
-              const esHoy=e._fecha===hoy;
-              const label=esHoy?"Hoy":e._fecha?fmtFecha(e._fecha):"—";
-              return(
-                <div key={e.id} onClick={()=>setView({cat:e.categoria,id:e.id})}
-                  style={{display:"flex",alignItems:"center",gap:6,padding:"5px 10px",borderRadius:20,cursor:"pointer",
-                    background:esHoy?"#dcfce7":"#f1f5f9",border:`1px solid ${esHoy?"#86efac":P.border}`}}>
-                  <span style={{fontWeight:800,fontSize:12,color:P.txtTitle,textTransform:"uppercase",fontFamily:FF}}>{e.patente||e.categoria||"S/P"}</span>
-                  <span style={{fontSize:11,color:esHoy?"#16a34a":P.txtMuted,fontWeight:600}}>{label}</span>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })()}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:18}}>
         {CATEGORIES.map(c=>{
           const us=equipos.filter(e=>e.categoria===c.id);
